@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/* Landing carousel: the active pagination dot fills over one slide interval. */
+@keyframes gs-dot-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.gs-dot-progress {
+  transform-origin: left center;
+  animation: gs-dot-progress var(--gs-slide-ms, 5000ms) linear forwards;
+}
+.gs-paused .gs-dot-progress { animation-play-state: paused; }
+
+/* Drawn-on rings and sparklines in the hero cards. */
+@keyframes gs-draw {
+  from { stroke-dashoffset: var(--gs-dash, 300); }
+  to { stroke-dashoffset: var(--gs-dash-end, 0); }
+}
+.gs-draw { animation: gs-draw 1.2s cubic-bezier(.2, .7, .2, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gs-dot-progress, .gs-draw { animation: none; }
+  .gs-dot-progress { transform: scaleX(1); }
+  .gs-motion { transition: none !important; }
+}

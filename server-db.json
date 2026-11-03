@@ -1,0 +1,2733 @@
+{
+  "users": [
+    {
+      "id": "usr_demo",
+      "email": "researcher@institute.edu",
+      "name": "Dr. David Anderson",
+      "role": "academic",
+      "organization": "National Research Lab",
+      "region": "United States",
+      "researchInterests": [
+        "Artificial Intelligence",
+        "Neuroscience",
+        "STEM Research"
+      ],
+      "qualifications": "Principal Investigator, PhD",
+      "fundingNeedsMin": 500000,
+      "pastProjects": "1. Advanced Multi-agent Cognitive Modeling Systems (NSF Award #210452)\n2. Empirical Assessment of Generative Learning Interfaces in Secondary Schools\n3. High-throughput Cloud Compute Architectures for Bio-Informatics Pipelines",
+      "teamMembers": "Dr. Jane Doe (Lead AI Investigator, PhD), Dr. Michael Chen (Co-PI, Associate Professor of Computer Science), Elena Rostova (Lead Data Systems Architect)"
+    }
+  ],
+  "funders": [
+    {
+      "id": "f_nsf",
+      "name": "National Science Foundation (NSF)",
+      "type": "government",
+      "website": "https://nsf.gov"
+    },
+    {
+      "id": "f_nih",
+      "name": "National Institutes of Health (NIH)",
+      "type": "government",
+      "website": "https://nih.gov"
+    },
+    {
+      "id": "f_doe",
+      "name": "Department of Energy (DOE)",
+      "type": "government",
+      "website": "https://energy.gov"
+    },
+    {
+      "id": "f_eu",
+      "name": "European Commission (Horizon Europe)",
+      "type": "international",
+      "website": "https://ec.europa.eu"
+    },
+    {
+      "id": "f_gates",
+      "name": "Bill & Melinda Gates Foundation",
+      "type": "foundation",
+      "website": "https://gatesfoundation.org"
+    },
+    {
+      "id": "f_google",
+      "name": "Google Research",
+      "type": "corporate",
+      "website": "https://research.google"
+    },
+    {
+      "id": "f_wellcome",
+      "name": "Wellcome Trust",
+      "type": "foundation",
+      "website": "https://wellcome.org"
+    },
+    {
+      "id": "f_daad",
+      "name": "German Academic Exchange Service (DAAD)",
+      "type": "government",
+      "website": "https://daad.de"
+    },
+    {
+      "id": "f_ford",
+      "name": "Ford Foundation",
+      "type": "foundation",
+      "website": "https://fordfoundation.org"
+    },
+    {
+      "id": "f_bezos",
+      "name": "Bezos Earth Fund",
+      "type": "foundation",
+      "website": "https://bezosearthfund.org"
+    }
+  ],
+  "grants": [
+    {
+      "id": "g_scr_sim_1792153216214_1",
+      "title": "Epidemiological Mapping for Emerging Zoonotic Risks",
+      "subject": "Virology, Disease Control, Global Health",
+      "fundingAmount": 850000,
+      "deadline": "2026-10-10",
+      "eligibleRegions": [
+        "Global",
+        "Sub-Saharan Africa"
+      ],
+      "eligibleOrgTypes": [
+        "Healthcare providers",
+        "Non-profit research organizations",
+        "Universities"
+      ],
+      "description": "Sponsoring urgent modeling of trans-species virus transmissions utilizing real-time sensor streams and local environmental datasets.",
+      "category": "Health",
+      "source": "NIH RePORTER",
+      "url": "https://nih.gov/grants/zoonotic",
+      "status": "active",
+      "funderId": "f_nih",
+      "funderName": "National Institutes of Health (NIH)",
+      "extractedKeywords": [
+        "crawler",
+        "discovered",
+        "health"
+      ]
+    },
+    {
+      "id": "g_scr_sim_1792153216214_0",
+      "title": "DeepSpace Astrophysics Computational Clusters (NSF 26-612)",
+      "subject": "Astrophysics, Supercomputing, Physics",
+      "fundingAmount": 1500000,
+      "deadline": "2026-11-15",
+      "eligibleRegions": [
+        "United States"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "National Laboratories"
+      ],
+      "description": "A newly updated solicitation for deployment of advanced machine learning algorithms to model interstellar gas dispersion and gravity ripples.",
+      "category": "Technology",
+      "source": "Grants.gov",
+      "url": "https://nsf.gov/funding/deepspace",
+      "status": "active",
+      "funderId": "f_nsf",
+      "funderName": "National Science Foundation (NSF)",
+      "extractedKeywords": [
+        "crawler",
+        "discovered",
+        "technology"
+      ]
+    },
+    {
+      "title": "Advanced AI and Machine Learning Foundations (NSF 26-501)",
+      "subject": "Artificial Intelligence, Machine Learning, Computer Science",
+      "fundingAmount": 750000,
+      "deadline": "2026-10-15",
+      "eligibleRegions": [
+        "United States",
+        "Global Partnerships"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "Funding for fundamental research in AI, neural network architectures, robust deep learning theory, and hardware-software co-design for next-generation intelligence agents.",
+      "source": "NSF Awards API",
+      "category": "Technology",
+      "url": "https://nsf.gov/funding/pgm_summ.jsp?pims_id=26501",
+      "status": "active",
+      "funderId": "f_nsf",
+      "extractedKeywords": [
+        "AI",
+        "deep learning",
+        "neural networks",
+        "computer science"
+      ],
+      "id": "g_seed_1",
+      "funderName": "National Science Foundation (NSF)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Advanced AI and Machine Learning Foundations (NSF 26-501).",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Artificial Intelligence, Machine Learning, Computer Science."
+    },
+    {
+      "title": "Cyber-Physical Systems and Intelligent Robotics (NSF 26-508)",
+      "subject": "Robotics, Engineering, Embedded Systems",
+      "fundingAmount": 1200000,
+      "deadline": "2026-11-20",
+      "eligibleRegions": [
+        "United States"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Small Businesses"
+      ],
+      "description": "Supports projects that integrate sensing, computation, and physical actuation into unified systems to address critical real-world automation and safety tasks.",
+      "source": "NSF Awards API",
+      "category": "Technology",
+      "url": "https://nsf.gov/funding/pgm_summ.jsp?pims_id=26508",
+      "status": "active",
+      "funderId": "f_nsf",
+      "extractedKeywords": [
+        "robotics",
+        "control systems",
+        "cyber-physical",
+        "sensing"
+      ],
+      "id": "g_seed_2",
+      "funderName": "National Science Foundation (NSF)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Cyber-Physical Systems and Intelligent Robotics (NSF 26-508).",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Robotics, Engineering, Embedded Systems."
+    },
+    {
+      "title": "Graduate Research Fellowship Program (GRFP)",
+      "subject": "STEM Research, Science Education",
+      "fundingAmount": 147000,
+      "deadline": "2026-10-22",
+      "eligibleRegions": [
+        "United States"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "Highly prestigious fellowships for outstanding graduate students pursuing research-based master's and doctoral degrees in STEM fields.",
+      "source": "NSF Awards API",
+      "category": "Education",
+      "url": "https://nsfgrfp.org",
+      "status": "active",
+      "funderId": "f_nsf",
+      "extractedKeywords": [
+        "fellowship",
+        "graduate student",
+        "STEM",
+        "scholarship"
+      ],
+      "id": "g_seed_3",
+      "funderName": "National Science Foundation (NSF)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Graduate Research Fellowship Program (GRFP).",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with STEM Research, Science Education."
+    },
+    {
+      "title": "Secure and Trustworthy Cyberspace (SaTC)",
+      "subject": "Cybersecurity, Cryptography, Privacy",
+      "fundingAmount": 600000,
+      "deadline": "2026-09-05",
+      "eligibleRegions": [
+        "United States"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit organizations"
+      ],
+      "description": "Supporting research to secure digital systems, protect privacy, and develop resilient cryptographic schemes against quantum attacks.",
+      "source": "NSF Awards API",
+      "category": "Technology",
+      "url": "https://nsf.gov/funding/pgm_summ.jsp?pims_id=504709",
+      "status": "active",
+      "funderId": "f_nsf",
+      "extractedKeywords": [
+        "cybersecurity",
+        "cryptography",
+        "privacy",
+        "quantum"
+      ],
+      "id": "g_seed_4",
+      "funderName": "National Science Foundation (NSF)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Secure and Trustworthy Cyberspace (SaTC).",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Cybersecurity, Cryptography, Privacy."
+    },
+    {
+      "title": "Smart and Connected Health (SCH)",
+      "subject": "Digital Health, Biomedical Engineering, Sensors",
+      "fundingAmount": 900000,
+      "deadline": "2026-12-10",
+      "eligibleRegions": [
+        "United States",
+        "Global Partnerships"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Healthcare providers",
+        "Non-profits"
+      ],
+      "description": "Promoting computer and information science innovations combined with medical insight to enable highly customized, digitalized patient care systems.",
+      "source": "NSF Awards API",
+      "category": "Health",
+      "url": "https://nsf.gov/funding/pgm_summ.jsp?pims_id=504739",
+      "status": "active",
+      "funderId": "f_nsf",
+      "extractedKeywords": [
+        "digital health",
+        "telemedicine",
+        "sensors",
+        "AI medicine"
+      ],
+      "id": "g_seed_5",
+      "funderName": "National Science Foundation (NSF)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Smart and Connected Health (SCH).",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Digital Health, Biomedical Engineering, Sensors."
+    },
+    {
+      "title": "Biomarkers and AI for Early Cancer Detection (NIH R01)",
+      "subject": "Oncology, Machine Learning, Diagnostic Medicine",
+      "fundingAmount": 2500000,
+      "deadline": "2026-09-18",
+      "eligibleRegions": [
+        "United States",
+        "Global / International"
+      ],
+      "eligibleOrgTypes": [
+        "Research centers",
+        "Universities",
+        "Academic medical institutions"
+      ],
+      "description": "Supports high-impact research deploying AI computer vision and biochemical biomarkers to discover and screen for early-stage solid tumors.",
+      "source": "NIH RePORTER",
+      "category": "Health",
+      "url": "https://grants.nih.gov/grants/guide/pa-files/PA-26-001.html",
+      "status": "active",
+      "funderId": "f_nih",
+      "extractedKeywords": [
+        "cancer",
+        "biomarkers",
+        "AI diagnostics",
+        "oncology"
+      ],
+      "id": "g_seed_6",
+      "funderName": "National Institutes of Health (NIH)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Biomarkers and AI for Early Cancer Detection (NIH R01).",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Oncology, Machine Learning, Diagnostic Medicine."
+    },
+    {
+      "title": "Innovative Brain Research and Neural Mapping (BRAIN Initiative)",
+      "subject": "Neuroscience, Neural Engineering",
+      "fundingAmount": 3200000,
+      "deadline": "2026-10-30",
+      "eligibleRegions": [
+        "United States",
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Academic labs",
+        "Hospitals"
+      ],
+      "description": "Accelerating the development of revolutionary neurotechnologies to understand how neural circuits generate behavior and manage cognitive processes.",
+      "source": "NIH RePORTER",
+      "category": "Health",
+      "url": "https://braininitiative.nih.gov",
+      "status": "active",
+      "funderId": "f_nih",
+      "extractedKeywords": [
+        "brain",
+        "neuroscience",
+        "neural interface",
+        "cognitive"
+      ],
+      "id": "g_seed_7",
+      "funderName": "National Institutes of Health (NIH)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Innovative Brain Research and Neural Mapping (BRAIN Initiative).",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Neuroscience, Neural Engineering."
+    },
+    {
+      "title": "Research Project Grant (Parent R01 Clinical Trial Required)",
+      "subject": "Clinical Trials, Public Health, Therapeutics",
+      "fundingAmount": 1800000,
+      "deadline": "2026-08-05",
+      "eligibleRegions": [
+        "United States"
+      ],
+      "eligibleOrgTypes": [
+        "Academic hospitals",
+        "Universities",
+        "Biotech Small Businesses"
+      ],
+      "description": "Providing support for health-related research and development based on the mission of NIH institutes. Requires robust human-subject trial designs.",
+      "source": "NIH RePORTER",
+      "category": "Health",
+      "url": "https://grants.nih.gov/grants/guide/parent_announcements.htm",
+      "status": "active",
+      "funderId": "f_nih",
+      "extractedKeywords": [
+        "clinical trial",
+        "medical research",
+        "public health"
+      ],
+      "id": "g_seed_8",
+      "funderName": "National Institutes of Health (NIH)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Research Project Grant (Parent R01 Clinical Trial Required).",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Clinical Trials, Public Health, Therapeutics."
+    },
+    {
+      "title": "Mental Health Innovations for Adolescents in Underserved Communities",
+      "subject": "Psychology, Behavioral Health, Community Programs",
+      "fundingAmount": 500000,
+      "deadline": "2026-07-25",
+      "eligibleRegions": [
+        "United States",
+        "US Territories"
+      ],
+      "eligibleOrgTypes": [
+        "Community non-profits",
+        "Academic medical schools",
+        "Public Clinics"
+      ],
+      "description": "Developing easily accessible, culturally specific counseling and therapy protocols utilizing mobile application frameworks.",
+      "source": "NIH RePORTER",
+      "category": "Health",
+      "url": "https://grants.nih.gov/grants/guide/rfa-files/RFA-MH-26-110.html",
+      "status": "active",
+      "funderId": "f_nih",
+      "extractedKeywords": [
+        "mental health",
+        "adolescents",
+        "community care",
+        "mobile app"
+      ],
+      "id": "g_seed_9",
+      "funderName": "National Institutes of Health (NIH)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Mental Health Innovations for Adolescents in Underserved Communities.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Psychology, Behavioral Health, Community Programs."
+    },
+    {
+      "title": "National Institute on Aging: Bioinformatics Infrastructure Enhancement",
+      "subject": "Gerontology, Bioinformatics, High-Performance Computing",
+      "fundingAmount": 450000,
+      "deadline": "2026-09-28",
+      "eligibleRegions": [
+        "United States"
+      ],
+      "eligibleOrgTypes": [
+        "Academic institutes",
+        "Postdoctoral fellows",
+        "Universities"
+      ],
+      "description": "Focusing on building open-source analytical software and data architectures to organize and process genomic databases on healthy longevity.",
+      "source": "NIH RePORTER",
+      "category": "Health",
+      "url": "https://grants.nih.gov/grants/guide/pa-files/PAR-26-015.html",
+      "status": "active",
+      "funderId": "f_nih",
+      "extractedKeywords": [
+        "longevity",
+        "bioinformatics",
+        "genomics",
+        "aging"
+      ],
+      "id": "g_seed_10",
+      "funderName": "National Institutes of Health (NIH)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of National Institute on Aging: Bioinformatics Infrastructure Enhancement.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Gerontology, Bioinformatics, High-Performance Computing."
+    },
+    {
+      "title": "Decarbonization Technologies and Grid Resilience Innovations",
+      "subject": "Clean Energy, Electrical Grid, Carbon Capture",
+      "fundingAmount": 4500000,
+      "deadline": "2026-11-15",
+      "eligibleRegions": [
+        "United States"
+      ],
+      "eligibleOrgTypes": [
+        "Industrial corporations",
+        "National laboratories",
+        "University Research Consortia"
+      ],
+      "description": "Massive scale funding aiming to integrate wind, solar, and battery energy storage into regional electrical grids while minimizing thermal load.",
+      "source": "Grants.gov",
+      "category": "Energy",
+      "url": "https://energy.gov/funding-opportunities",
+      "status": "active",
+      "funderId": "f_doe",
+      "extractedKeywords": [
+        "clean energy",
+        "smart grid",
+        "carbon capture",
+        "batteries"
+      ],
+      "id": "g_seed_11",
+      "funderName": "Department of Energy (DOE)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Decarbonization Technologies and Grid Resilience Innovations.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Clean Energy, Electrical Grid, Carbon Capture."
+    },
+    {
+      "title": "Next-Generation Nuclear Fusion Fuel Containment Research",
+      "subject": "Physics, Nuclear Engineering, Material Sciences",
+      "fundingAmount": 3000000,
+      "deadline": "2026-12-05",
+      "eligibleRegions": [
+        "United States",
+        "Global Collaboration"
+      ],
+      "eligibleOrgTypes": [
+        "Universities",
+        "Research institutions"
+      ],
+      "description": "Investigating high-strength magnetic fields and advanced materials capable of safely containing plasma reactions for clean power generation.",
+      "source": "Grants.gov",
+      "category": "Energy",
+      "url": "https://energy.gov/fusion-funding",
+      "status": "active",
+      "funderId": "f_doe",
+      "extractedKeywords": [
+        "nuclear fusion",
+        "plasma",
+        "materials",
+        "clean power"
+      ],
+      "id": "g_seed_12",
+      "funderName": "Department of Energy (DOE)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Next-Generation Nuclear Fusion Fuel Containment Research.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Physics, Nuclear Engineering, Material Sciences."
+    },
+    {
+      "title": "Horizon Europe: Green AI & Eco-Efficient Algorithms (Cluster 4)",
+      "subject": "Green Computing, Climate Science, Machine Learning",
+      "fundingAmount": 5000000,
+      "deadline": "2026-11-01",
+      "eligibleRegions": [
+        "European Union",
+        "Associated Countries",
+        "Global consortia"
+      ],
+      "eligibleOrgTypes": [
+        "Consortia of Academic + Corporate entities",
+        "SMEs"
+      ],
+      "description": "Sponsoring research into carbon-neutral computing centers, energy-efficient training strategies, and climate modeling software using AI.",
+      "source": "EU Funding Portal",
+      "category": "Energy",
+      "url": "https://ec.europa.eu/info/funding-tenders/opportunities",
+      "status": "active",
+      "funderId": "f_eu",
+      "extractedKeywords": [
+        "green AI",
+        "carbon neutral",
+        "energy efficiency",
+        "EU"
+      ],
+      "id": "g_seed_13",
+      "funderName": "European Commission (Horizon Europe)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Horizon Europe: Green AI & Eco-Efficient Algorithms (Cluster 4).",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Green Computing, Climate Science, Machine Learning."
+    },
+    {
+      "title": "Horizon Europe: Quantum Cryptography and Quantum Communication Networks",
+      "subject": "Quantum Physics, Cybersecurity, Telecom",
+      "fundingAmount": 4200000,
+      "deadline": "2026-10-08",
+      "eligibleRegions": [
+        "European Union",
+        "Associated Countries"
+      ],
+      "eligibleOrgTypes": [
+        "Universities",
+        "Telecom Operators",
+        "Hardware Startups"
+      ],
+      "description": "Supports building secure space-to-ground quantum communications and implementing quantum key distribution protocols.",
+      "source": "EU Funding Portal",
+      "category": "Technology",
+      "url": "https://ec.europa.eu/info/funding-tenders/quantum",
+      "status": "active",
+      "funderId": "f_eu",
+      "extractedKeywords": [
+        "quantum",
+        "cryptography",
+        "telecom",
+        "EU"
+      ],
+      "id": "g_seed_14",
+      "funderName": "European Commission (Horizon Europe)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Horizon Europe: Quantum Cryptography and Quantum Communication Networks.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Quantum Physics, Cybersecurity, Telecom."
+    },
+    {
+      "title": "Marie Skłodowska-Curie Actions (MSCA) Postdoctoral Fellowships",
+      "subject": "All disciplines, Interdisciplinary Research",
+      "fundingAmount": 185000,
+      "deadline": "2026-09-11",
+      "eligibleRegions": [
+        "Global (to conduct research in Europe)"
+      ],
+      "eligibleOrgTypes": [
+        "Postgraduate scholars",
+        "Postdoctoral researchers"
+      ],
+      "description": "Enhancing the creative and innovative potential of PhD holders wishing to acquire new skills through advanced training and international mobility.",
+      "source": "EU Funding Portal",
+      "category": "Education",
+      "url": "https://ec.europa.eu/research/mariecurieactions",
+      "status": "active",
+      "funderId": "f_eu",
+      "extractedKeywords": [
+        "postdoc",
+        "fellowship",
+        "mobility",
+        "Europe"
+      ],
+      "id": "g_seed_15",
+      "funderName": "European Commission (Horizon Europe)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Marie Skłodowska-Curie Actions (MSCA) Postdoctoral Fellowships.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with All disciplines, Interdisciplinary Research."
+    },
+    {
+      "title": "Grand Challenges: Generative AI for Global Health Equity",
+      "subject": "AI, Public Health, Global Development",
+      "fundingAmount": 100000,
+      "deadline": "2026-07-04",
+      "eligibleRegions": [
+        "Global / Low-and-Middle Income Countries prioritized"
+      ],
+      "eligibleOrgTypes": [
+        "Non-profits",
+        "Researchers",
+        "Tech startups",
+        "Social enterprises"
+      ],
+      "description": "Rapid funding program for application of LLMs and generative agents to solve local health, agricultural, and educational bottlenecks in Africa and South Asia.",
+      "source": "Gates Foundation Grand Challenges",
+      "category": "Health",
+      "url": "https://gcgh.grandchallenges.org",
+      "status": "active",
+      "funderId": "f_gates",
+      "extractedKeywords": [
+        "generative AI",
+        "equity",
+        "global health",
+        "Africa"
+      ],
+      "id": "g_seed_16",
+      "funderName": "Bill & Melinda Gates Foundation",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Grand Challenges: Generative AI for Global Health Equity.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with AI, Public Health, Global Development."
+    },
+    {
+      "title": "Innovations in Maternal and Newborn Survival Technologies",
+      "subject": "Pediatrics, Maternal Care, Medical Devices",
+      "fundingAmount": 500000,
+      "deadline": "2026-08-15",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Universities",
+        "Hospitals",
+        "Biotech firms"
+      ],
+      "description": "Funding portable, battery-powered medical equipment designed for low-resource environments to ensure mother and infant safety during births.",
+      "source": "Gates Foundation Grand Challenges",
+      "category": "Health",
+      "url": "https://gatesfoundation.org/maternal",
+      "status": "active",
+      "funderId": "f_gates",
+      "extractedKeywords": [
+        "maternal",
+        "neonatal",
+        "low-resource",
+        "medical device"
+      ],
+      "id": "g_seed_17",
+      "funderName": "Bill & Melinda Gates Foundation",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Innovations in Maternal and Newborn Survival Technologies.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Pediatrics, Maternal Care, Medical Devices."
+    },
+    {
+      "title": "Google Research Scholar Program 2026",
+      "subject": "Computer Science, Human-Computer Interaction, AI Safety",
+      "fundingAmount": 60000,
+      "deadline": "2026-10-01",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Early-career university professors",
+        "Academic faculty"
+      ],
+      "description": "Supporting world-class research by early-career faculty in fields like machine learning, natural language processing, privacy, security, and human-computer interaction.",
+      "source": "Google Research API",
+      "category": "Technology",
+      "url": "https://research.google/outreach/research-scholar-program",
+      "status": "active",
+      "funderId": "f_google",
+      "extractedKeywords": [
+        "early career",
+        "professor",
+        "faculty",
+        "computer science"
+      ],
+      "id": "g_seed_18",
+      "funderName": "Google Research",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Google Research Scholar Program 2026.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Computer Science, Human-Computer Interaction, AI Safety."
+    },
+    {
+      "title": "Responsible AI and Ethical Machine Learning Frameworks",
+      "subject": "AI Ethics, Algorithmic Bias, Social Impact",
+      "fundingAmount": 120000,
+      "deadline": "2026-09-15",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Academic institutions",
+        "Ethics research groups",
+        "Non-profits"
+      ],
+      "description": "Supporting academic scholars analyzing models for biases, halluncinations, security vulnerabilities, and defining frameworks for public-interest AI.",
+      "source": "Google Research API",
+      "category": "Social Sciences",
+      "url": "https://research.google/responsible-ai",
+      "status": "active",
+      "funderId": "f_google",
+      "extractedKeywords": [
+        "AI ethics",
+        "bias",
+        "responsible AI",
+        "social impact"
+      ],
+      "id": "g_seed_19",
+      "funderName": "Google Research",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Responsible AI and Ethical Machine Learning Frameworks.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with AI Ethics, Algorithmic Bias, Social Impact."
+    },
+    {
+      "title": "Wellcome Career Development Awards",
+      "subject": "Health, Biomedical Research, Humanities",
+      "fundingAmount": 1500000,
+      "deadline": "2026-09-30",
+      "eligibleRegions": [
+        "United Kingdom",
+        "Low-and-Middle Income Countries"
+      ],
+      "eligibleOrgTypes": [
+        "Mid-career researchers",
+        "Independent academic scholars"
+      ],
+      "description": "Funding for mid-career researchers from any discipline who have the potential to be international research leaders, focusing on health and medical humanities.",
+      "source": "Wellcome Trust Website",
+      "category": "Health",
+      "url": "https://wellcome.org/grant-funding/schemes",
+      "status": "active",
+      "funderId": "f_wellcome",
+      "extractedKeywords": [
+        "career development",
+        "mid career",
+        "humanities",
+        "biomedical"
+      ],
+      "id": "g_seed_20",
+      "funderName": "Wellcome Trust",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Wellcome Career Development Awards.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Health, Biomedical Research, Humanities."
+    },
+    {
+      "title": "DAAD Research Grants - Doctoral Programmes in Germany",
+      "subject": "All fields, PhD research, International Studies",
+      "fundingAmount": 48000,
+      "deadline": "2026-10-31",
+      "eligibleRegions": [
+        "Global (excluding Germany residents)"
+      ],
+      "eligibleOrgTypes": [
+        "PhD students",
+        "Master graduates"
+      ],
+      "description": "Fully funded research grants allowing excellent international postgraduate candidates to conduct doctoral theses or research projects at German universities.",
+      "source": "DAAD Germany",
+      "category": "Education",
+      "url": "https://www.daad.de/en/study-and-research-in-germany/scholarships",
+      "status": "active",
+      "funderId": "f_daad",
+      "extractedKeywords": [
+        "germany",
+        "PhD scholarship",
+        "exchange",
+        "postgraduate"
+      ],
+      "id": "g_seed_21",
+      "funderName": "German Academic Exchange Service (DAAD)",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of DAAD Research Grants - Doctoral Programmes in Germany.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with All fields, PhD research, International Studies."
+    },
+    {
+      "title": "Restoration of Tropical Forests and Soil Biodiversity",
+      "subject": "Ecology, Soil Science, Climate Adaptation",
+      "fundingAmount": 3500000,
+      "deadline": "2026-11-12",
+      "eligibleRegions": [
+        "Latin America",
+        "Sub-Saharan Africa",
+        "Southeast Asia"
+      ],
+      "eligibleOrgTypes": [
+        "Ecology consortia",
+        "Non-profit organizations",
+        "Research Universities"
+      ],
+      "description": "Sponsoring large-scale community-led tree restoration and scientific analysis of soil microbial recovery to capture carbon permanently.",
+      "source": "Bezos Earth Fund Grants",
+      "category": "Energy",
+      "url": "https://bezosearthfund.org/grants",
+      "status": "active",
+      "funderId": "f_bezos",
+      "extractedKeywords": [
+        "reforestation",
+        "soil ecology",
+        "climate",
+        "carbon capture"
+      ],
+      "id": "g_seed_22",
+      "funderName": "Bezos Earth Fund",
+      "objectives": "To accelerate innovation, support state-of-the-art developments, and establish high-fidelity collaborative research paradigms in the area of Restoration of Tropical Forests and Soil Biodiversity.",
+      "requiredOutcomes": "1. Production of high-impact research methodologies and open-source models.\n2. Pilot testing or hardware-software prototypes.\n3. Detailed final performance analysis and scaling plan.",
+      "scope": "Core scope includes theoretical proofs, applied pilot studies, and peer-reviewed outputs that align with Ecology, Soil Science, Climate Adaptation."
+    },
+    {
+      "id": "g_gen_1",
+      "title": "National Science Foundation - Computer Vision in Agriculture Research Call",
+      "subject": "Computer Vision in Agriculture, Technology Research, Applied Methods",
+      "fundingAmount": 50000,
+      "deadline": "2026-08-10",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of computer vision in agriculture. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "National Science Foundation Bulletin",
+      "category": "Technology",
+      "url": "https://nsf.gov/opportunities/grant_100",
+      "status": "active",
+      "funderId": "f_nsf",
+      "funderName": "National Science Foundation (NSF)",
+      "extractedKeywords": [
+        "computer",
+        "technology",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in computer vision in agriculture that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to computer vision in agriculture that fall squarely within Technology boundaries."
+    },
+    {
+      "id": "g_gen_2",
+      "title": "National Institutes of Health - Pediatric Vaccine Distribution Systems Research Call",
+      "subject": "Pediatric Vaccine Distribution Systems, Health Research, Applied Methods",
+      "fundingAmount": 95000,
+      "deadline": "2026-09-11",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of pediatric vaccine distribution systems. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "National Institutes of Health Bulletin",
+      "category": "Health",
+      "url": "https://nih.gov/opportunities/grant_101",
+      "status": "active",
+      "funderId": "f_nih",
+      "funderName": "National Institutes of Health (NIH)",
+      "extractedKeywords": [
+        "pediatric",
+        "health",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in pediatric vaccine distribution systems that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to pediatric vaccine distribution systems that fall squarely within Health boundaries."
+    },
+    {
+      "id": "g_gen_3",
+      "title": "Department of Energy - Ocean Thermal Wave Energy Converters Research Call",
+      "subject": "Ocean Thermal Wave Energy Converters, Energy Research, Applied Methods",
+      "fundingAmount": 140000,
+      "deadline": "2026-10-12",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of ocean thermal wave energy converters. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Department of Energy Bulletin",
+      "category": "Energy",
+      "url": "https://energy.gov/opportunities/grant_102",
+      "status": "active",
+      "funderId": "f_doe",
+      "funderName": "Department of Energy (DOE)",
+      "extractedKeywords": [
+        "ocean",
+        "energy",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in ocean thermal wave energy converters that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to ocean thermal wave energy converters that fall squarely within Energy boundaries."
+    },
+    {
+      "id": "g_gen_4",
+      "title": "European Commission - Digital Literacy for Rural Communities Research Call",
+      "subject": "Digital Literacy for Rural Communities, Education Research, Applied Methods",
+      "fundingAmount": 185000,
+      "deadline": "2026-11-13",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of digital literacy for rural communities. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "European Commission Bulletin",
+      "category": "Education",
+      "url": "https://ec.europa.eu/opportunities/grant_103",
+      "status": "active",
+      "funderId": "f_eu",
+      "funderName": "European Commission (Horizon Europe)",
+      "extractedKeywords": [
+        "digital",
+        "education",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in digital literacy for rural communities that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to digital literacy for rural communities that fall squarely within Education boundaries."
+    },
+    {
+      "id": "g_gen_5",
+      "title": "Bill & Melinda Gates Foundation - Post-Conflict Mental Health Restoration Research Call",
+      "subject": "Post-Conflict Mental Health Restoration, Social Sciences Research, Applied Methods",
+      "fundingAmount": 230000,
+      "deadline": "2026-12-14",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of post-conflict mental health restoration. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Bill & Melinda Gates Foundation Bulletin",
+      "category": "Social Sciences",
+      "url": "https://gatesfoundation.org/opportunities/grant_104",
+      "status": "active",
+      "funderId": "f_gates",
+      "funderName": "Bill & Melinda Gates Foundation",
+      "extractedKeywords": [
+        "post-conflict",
+        "social sciences",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in post-conflict mental health restoration that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to post-conflict mental health restoration that fall squarely within Social Sciences boundaries."
+    },
+    {
+      "id": "g_gen_6",
+      "title": "Google Research - Autonomous Drone Swarms for Forest Fire Early Warning Research Call",
+      "subject": "Autonomous Drone Swarms for Forest Fire Early Warning, Technology Research, Applied Methods",
+      "fundingAmount": 275000,
+      "deadline": "2026-08-15",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of autonomous drone swarms for forest fire early warning. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Google Research Bulletin",
+      "category": "Technology",
+      "url": "https://research.google/opportunities/grant_105",
+      "status": "active",
+      "funderId": "f_google",
+      "funderName": "Google Research",
+      "extractedKeywords": [
+        "autonomous",
+        "technology",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in autonomous drone swarms for forest fire early warning that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to autonomous drone swarms for forest fire early warning that fall squarely within Technology boundaries."
+    },
+    {
+      "id": "g_gen_7",
+      "title": "Wellcome Trust - Genomic Engineering of Drought-Resilient Wheat Research Call",
+      "subject": "Genomic Engineering of Drought-Resilient Wheat, Energy Research, Applied Methods",
+      "fundingAmount": 320000,
+      "deadline": "2026-09-16",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of genomic engineering of drought-resilient wheat. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Wellcome Trust Bulletin",
+      "category": "Energy",
+      "url": "https://wellcome.org/opportunities/grant_106",
+      "status": "active",
+      "funderId": "f_wellcome",
+      "funderName": "Wellcome Trust",
+      "extractedKeywords": [
+        "genomic",
+        "energy",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in genomic engineering of drought-resilient wheat that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to genomic engineering of drought-resilient wheat that fall squarely within Energy boundaries."
+    },
+    {
+      "id": "g_gen_8",
+      "title": "German Academic Exchange Service - Micro-Grid Management via Decentralized Blockchains Research Call",
+      "subject": "Micro-Grid Management via Decentralized Blockchains, Energy Research, Applied Methods",
+      "fundingAmount": 365000,
+      "deadline": "2026-10-17",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of micro-grid management via decentralized blockchains. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "German Academic Exchange Service Bulletin",
+      "category": "Energy",
+      "url": "https://daad.de/opportunities/grant_107",
+      "status": "active",
+      "funderId": "f_daad",
+      "funderName": "German Academic Exchange Service (DAAD)",
+      "extractedKeywords": [
+        "micro-grid",
+        "energy",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in micro-grid management via decentralized blockchains that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to micro-grid management via decentralized blockchains that fall squarely within Energy boundaries."
+    },
+    {
+      "id": "g_gen_9",
+      "title": "Ford Foundation - Ethical Guidelines for Autonomous Medical Chatbots Research Call",
+      "subject": "Ethical Guidelines for Autonomous Medical Chatbots, Health Research, Applied Methods",
+      "fundingAmount": 410000,
+      "deadline": "2026-11-18",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of ethical guidelines for autonomous medical chatbots. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Ford Foundation Bulletin",
+      "category": "Health",
+      "url": "https://fordfoundation.org/opportunities/grant_108",
+      "status": "active",
+      "funderId": "f_ford",
+      "funderName": "Ford Foundation",
+      "extractedKeywords": [
+        "ethical",
+        "health",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in ethical guidelines for autonomous medical chatbots that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to ethical guidelines for autonomous medical chatbots that fall squarely within Health boundaries."
+    },
+    {
+      "id": "g_gen_10",
+      "title": "Bezos Earth Fund - Empirical Studies of Hybrid Classroom Pedagogies Research Call",
+      "subject": "Empirical Studies of Hybrid Classroom Pedagogies, Education Research, Applied Methods",
+      "fundingAmount": 455000,
+      "deadline": "2026-12-19",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of empirical studies of hybrid classroom pedagogies. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Bezos Earth Fund Bulletin",
+      "category": "Education",
+      "url": "https://bezosearthfund.org/opportunities/grant_109",
+      "status": "active",
+      "funderId": "f_bezos",
+      "funderName": "Bezos Earth Fund",
+      "extractedKeywords": [
+        "empirical",
+        "education",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in empirical studies of hybrid classroom pedagogies that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to empirical studies of hybrid classroom pedagogies that fall squarely within Education boundaries."
+    },
+    {
+      "id": "g_gen_11",
+      "title": "National Science Foundation - Public Transportation Mapping in Metropolises Research Call",
+      "subject": "Public Transportation Mapping in Metropolises, Social Sciences Research, Applied Methods",
+      "fundingAmount": 500000,
+      "deadline": "2026-08-20",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of public transportation mapping in metropolises. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "National Science Foundation Bulletin",
+      "category": "Social Sciences",
+      "url": "https://nsf.gov/opportunities/grant_110",
+      "status": "active",
+      "funderId": "f_nsf",
+      "funderName": "National Science Foundation (NSF)",
+      "extractedKeywords": [
+        "public",
+        "social sciences",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in public transportation mapping in metropolises that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to public transportation mapping in metropolises that fall squarely within Social Sciences boundaries."
+    },
+    {
+      "id": "g_gen_12",
+      "title": "National Institutes of Health - Cardiovascular Risk Assessment Using Smartwatch Data Research Call",
+      "subject": "Cardiovascular Risk Assessment Using Smartwatch Data, Health Research, Applied Methods",
+      "fundingAmount": 545000,
+      "deadline": "2026-09-21",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of cardiovascular risk assessment using smartwatch data. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "National Institutes of Health Bulletin",
+      "category": "Health",
+      "url": "https://nih.gov/opportunities/grant_111",
+      "status": "active",
+      "funderId": "f_nih",
+      "funderName": "National Institutes of Health (NIH)",
+      "extractedKeywords": [
+        "cardiovascular",
+        "health",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in cardiovascular risk assessment using smartwatch data that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to cardiovascular risk assessment using smartwatch data that fall squarely within Health boundaries."
+    },
+    {
+      "id": "g_gen_13",
+      "title": "Department of Energy - Quantum Dot Solar Cells for High Efficiency Research Call",
+      "subject": "Quantum Dot Solar Cells for High Efficiency, Energy Research, Applied Methods",
+      "fundingAmount": 590000,
+      "deadline": "2026-10-22",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of quantum dot solar cells for high efficiency. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Department of Energy Bulletin",
+      "category": "Energy",
+      "url": "https://energy.gov/opportunities/grant_112",
+      "status": "active",
+      "funderId": "f_doe",
+      "funderName": "Department of Energy (DOE)",
+      "extractedKeywords": [
+        "quantum",
+        "energy",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in quantum dot solar cells for high efficiency that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to quantum dot solar cells for high efficiency that fall squarely within Energy boundaries."
+    },
+    {
+      "id": "g_gen_14",
+      "title": "European Commission - Postgraduate Fellowship in Cultural Anthropologies Research Call",
+      "subject": "Postgraduate Fellowship in Cultural Anthropologies, Education Research, Applied Methods",
+      "fundingAmount": 635000,
+      "deadline": "2026-11-23",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of postgraduate fellowship in cultural anthropologies. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "European Commission Bulletin",
+      "category": "Education",
+      "url": "https://ec.europa.eu/opportunities/grant_113",
+      "status": "active",
+      "funderId": "f_eu",
+      "funderName": "European Commission (Horizon Europe)",
+      "extractedKeywords": [
+        "postgraduate",
+        "education",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in postgraduate fellowship in cultural anthropologies that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to postgraduate fellowship in cultural anthropologies that fall squarely within Education boundaries."
+    },
+    {
+      "id": "g_gen_15",
+      "title": "Bill & Melinda Gates Foundation - Carbon Neutral Concrete Manufacturing Techniques Research Call",
+      "subject": "Carbon Neutral Concrete Manufacturing Techniques, Energy Research, Applied Methods",
+      "fundingAmount": 680000,
+      "deadline": "2026-12-24",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of carbon neutral concrete manufacturing techniques. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Bill & Melinda Gates Foundation Bulletin",
+      "category": "Energy",
+      "url": "https://gatesfoundation.org/opportunities/grant_114",
+      "status": "active",
+      "funderId": "f_gates",
+      "funderName": "Bill & Melinda Gates Foundation",
+      "extractedKeywords": [
+        "carbon",
+        "energy",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in carbon neutral concrete manufacturing techniques that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to carbon neutral concrete manufacturing techniques that fall squarely within Energy boundaries."
+    },
+    {
+      "id": "g_gen_16",
+      "title": "Google Research - Machine Learning for Rare Genetic Diseases Research Call",
+      "subject": "Machine Learning for Rare Genetic Diseases, Health Research, Applied Methods",
+      "fundingAmount": 725000,
+      "deadline": "2026-08-25",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of machine learning for rare genetic diseases. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Google Research Bulletin",
+      "category": "Health",
+      "url": "https://research.google/opportunities/grant_115",
+      "status": "active",
+      "funderId": "f_google",
+      "funderName": "Google Research",
+      "extractedKeywords": [
+        "machine",
+        "health",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in machine learning for rare genetic diseases that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to machine learning for rare genetic diseases that fall squarely within Health boundaries."
+    },
+    {
+      "id": "g_gen_17",
+      "title": "Wellcome Trust - Scalable Decentralized Database Implementations Research Call",
+      "subject": "Scalable Decentralized Database Implementations, Technology Research, Applied Methods",
+      "fundingAmount": 770000,
+      "deadline": "2026-09-26",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of scalable decentralized database implementations. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Wellcome Trust Bulletin",
+      "category": "Technology",
+      "url": "https://wellcome.org/opportunities/grant_116",
+      "status": "active",
+      "funderId": "f_wellcome",
+      "funderName": "Wellcome Trust",
+      "extractedKeywords": [
+        "scalable",
+        "technology",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in scalable decentralized database implementations that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to scalable decentralized database implementations that fall squarely within Technology boundaries."
+    },
+    {
+      "id": "g_gen_18",
+      "title": "German Academic Exchange Service - Socioeconomic Impacts of Remote Gig-Work Platforms Research Call",
+      "subject": "Socioeconomic Impacts of Remote Gig-Work Platforms, Social Sciences Research, Applied Methods",
+      "fundingAmount": 815000,
+      "deadline": "2026-10-27",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of socioeconomic impacts of remote gig-work platforms. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "German Academic Exchange Service Bulletin",
+      "category": "Social Sciences",
+      "url": "https://daad.de/opportunities/grant_117",
+      "status": "active",
+      "funderId": "f_daad",
+      "funderName": "German Academic Exchange Service (DAAD)",
+      "extractedKeywords": [
+        "socioeconomic",
+        "social sciences",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in socioeconomic impacts of remote gig-work platforms that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to socioeconomic impacts of remote gig-work platforms that fall squarely within Social Sciences boundaries."
+    },
+    {
+      "id": "g_gen_19",
+      "title": "Ford Foundation - Secondary School Physics Interactive VR Curricula Research Call",
+      "subject": "Secondary School Physics Interactive VR Curricula, Education Research, Applied Methods",
+      "fundingAmount": 860000,
+      "deadline": "2026-11-28",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of secondary school physics interactive vr curricula. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Ford Foundation Bulletin",
+      "category": "Education",
+      "url": "https://fordfoundation.org/opportunities/grant_118",
+      "status": "active",
+      "funderId": "f_ford",
+      "funderName": "Ford Foundation",
+      "extractedKeywords": [
+        "secondary",
+        "education",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in secondary school physics interactive vr curricula that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to secondary school physics interactive vr curricula that fall squarely within Education boundaries."
+    },
+    {
+      "id": "g_gen_20",
+      "title": "Bezos Earth Fund - Geothermal Heat Pumps for Low-Income Housing Research Call",
+      "subject": "Geothermal Heat Pumps for Low-Income Housing, Energy Research, Applied Methods",
+      "fundingAmount": 905000,
+      "deadline": "2026-12-29",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of geothermal heat pumps for low-income housing. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Bezos Earth Fund Bulletin",
+      "category": "Energy",
+      "url": "https://bezosearthfund.org/opportunities/grant_119",
+      "status": "active",
+      "funderId": "f_bezos",
+      "funderName": "Bezos Earth Fund",
+      "extractedKeywords": [
+        "geothermal",
+        "energy",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in geothermal heat pumps for low-income housing that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to geothermal heat pumps for low-income housing that fall squarely within Energy boundaries."
+    },
+    {
+      "id": "g_gen_21",
+      "title": "National Science Foundation - Computer Vision in Agriculture Research Call",
+      "subject": "Computer Vision in Agriculture, Technology Research, Applied Methods",
+      "fundingAmount": 950000,
+      "deadline": "2026-08-10",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of computer vision in agriculture. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "National Science Foundation Bulletin",
+      "category": "Technology",
+      "url": "https://nsf.gov/opportunities/grant_120",
+      "status": "active",
+      "funderId": "f_nsf",
+      "funderName": "National Science Foundation (NSF)",
+      "extractedKeywords": [
+        "computer",
+        "technology",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in computer vision in agriculture that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to computer vision in agriculture that fall squarely within Technology boundaries."
+    },
+    {
+      "id": "g_gen_22",
+      "title": "National Institutes of Health - Pediatric Vaccine Distribution Systems Research Call",
+      "subject": "Pediatric Vaccine Distribution Systems, Health Research, Applied Methods",
+      "fundingAmount": 995000,
+      "deadline": "2026-09-11",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of pediatric vaccine distribution systems. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "National Institutes of Health Bulletin",
+      "category": "Health",
+      "url": "https://nih.gov/opportunities/grant_121",
+      "status": "active",
+      "funderId": "f_nih",
+      "funderName": "National Institutes of Health (NIH)",
+      "extractedKeywords": [
+        "pediatric",
+        "health",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in pediatric vaccine distribution systems that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to pediatric vaccine distribution systems that fall squarely within Health boundaries."
+    },
+    {
+      "id": "g_gen_23",
+      "title": "Department of Energy - Ocean Thermal Wave Energy Converters Research Call",
+      "subject": "Ocean Thermal Wave Energy Converters, Energy Research, Applied Methods",
+      "fundingAmount": 1040000,
+      "deadline": "2026-10-12",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of ocean thermal wave energy converters. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Department of Energy Bulletin",
+      "category": "Energy",
+      "url": "https://energy.gov/opportunities/grant_122",
+      "status": "active",
+      "funderId": "f_doe",
+      "funderName": "Department of Energy (DOE)",
+      "extractedKeywords": [
+        "ocean",
+        "energy",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in ocean thermal wave energy converters that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to ocean thermal wave energy converters that fall squarely within Energy boundaries."
+    },
+    {
+      "id": "g_gen_24",
+      "title": "European Commission - Digital Literacy for Rural Communities Research Call",
+      "subject": "Digital Literacy for Rural Communities, Education Research, Applied Methods",
+      "fundingAmount": 1085000,
+      "deadline": "2026-11-13",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of digital literacy for rural communities. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "European Commission Bulletin",
+      "category": "Education",
+      "url": "https://ec.europa.eu/opportunities/grant_123",
+      "status": "active",
+      "funderId": "f_eu",
+      "funderName": "European Commission (Horizon Europe)",
+      "extractedKeywords": [
+        "digital",
+        "education",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in digital literacy for rural communities that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to digital literacy for rural communities that fall squarely within Education boundaries."
+    },
+    {
+      "id": "g_gen_25",
+      "title": "Bill & Melinda Gates Foundation - Post-Conflict Mental Health Restoration Research Call",
+      "subject": "Post-Conflict Mental Health Restoration, Social Sciences Research, Applied Methods",
+      "fundingAmount": 1130000,
+      "deadline": "2026-12-14",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of post-conflict mental health restoration. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Bill & Melinda Gates Foundation Bulletin",
+      "category": "Social Sciences",
+      "url": "https://gatesfoundation.org/opportunities/grant_124",
+      "status": "active",
+      "funderId": "f_gates",
+      "funderName": "Bill & Melinda Gates Foundation",
+      "extractedKeywords": [
+        "post-conflict",
+        "social sciences",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in post-conflict mental health restoration that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to post-conflict mental health restoration that fall squarely within Social Sciences boundaries."
+    },
+    {
+      "id": "g_gen_26",
+      "title": "Google Research - Autonomous Drone Swarms for Forest Fire Early Warning Research Call",
+      "subject": "Autonomous Drone Swarms for Forest Fire Early Warning, Technology Research, Applied Methods",
+      "fundingAmount": 1175000,
+      "deadline": "2026-08-15",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of autonomous drone swarms for forest fire early warning. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Google Research Bulletin",
+      "category": "Technology",
+      "url": "https://research.google/opportunities/grant_125",
+      "status": "active",
+      "funderId": "f_google",
+      "funderName": "Google Research",
+      "extractedKeywords": [
+        "autonomous",
+        "technology",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in autonomous drone swarms for forest fire early warning that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to autonomous drone swarms for forest fire early warning that fall squarely within Technology boundaries."
+    },
+    {
+      "id": "g_gen_27",
+      "title": "Wellcome Trust - Genomic Engineering of Drought-Resilient Wheat Research Call",
+      "subject": "Genomic Engineering of Drought-Resilient Wheat, Energy Research, Applied Methods",
+      "fundingAmount": 1220000,
+      "deadline": "2026-09-16",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of genomic engineering of drought-resilient wheat. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Wellcome Trust Bulletin",
+      "category": "Energy",
+      "url": "https://wellcome.org/opportunities/grant_126",
+      "status": "active",
+      "funderId": "f_wellcome",
+      "funderName": "Wellcome Trust",
+      "extractedKeywords": [
+        "genomic",
+        "energy",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in genomic engineering of drought-resilient wheat that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to genomic engineering of drought-resilient wheat that fall squarely within Energy boundaries."
+    },
+    {
+      "id": "g_gen_28",
+      "title": "German Academic Exchange Service - Micro-Grid Management via Decentralized Blockchains Research Call",
+      "subject": "Micro-Grid Management via Decentralized Blockchains, Energy Research, Applied Methods",
+      "fundingAmount": 1265000,
+      "deadline": "2026-10-17",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of micro-grid management via decentralized blockchains. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "German Academic Exchange Service Bulletin",
+      "category": "Energy",
+      "url": "https://daad.de/opportunities/grant_127",
+      "status": "active",
+      "funderId": "f_daad",
+      "funderName": "German Academic Exchange Service (DAAD)",
+      "extractedKeywords": [
+        "micro-grid",
+        "energy",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in micro-grid management via decentralized blockchains that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to micro-grid management via decentralized blockchains that fall squarely within Energy boundaries."
+    },
+    {
+      "id": "g_gen_29",
+      "title": "Ford Foundation - Ethical Guidelines for Autonomous Medical Chatbots Research Call",
+      "subject": "Ethical Guidelines for Autonomous Medical Chatbots, Health Research, Applied Methods",
+      "fundingAmount": 1310000,
+      "deadline": "2026-11-18",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of ethical guidelines for autonomous medical chatbots. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Ford Foundation Bulletin",
+      "category": "Health",
+      "url": "https://fordfoundation.org/opportunities/grant_128",
+      "status": "active",
+      "funderId": "f_ford",
+      "funderName": "Ford Foundation",
+      "extractedKeywords": [
+        "ethical",
+        "health",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in ethical guidelines for autonomous medical chatbots that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to ethical guidelines for autonomous medical chatbots that fall squarely within Health boundaries."
+    },
+    {
+      "id": "g_gen_30",
+      "title": "Bezos Earth Fund - Empirical Studies of Hybrid Classroom Pedagogies Research Call",
+      "subject": "Empirical Studies of Hybrid Classroom Pedagogies, Education Research, Applied Methods",
+      "fundingAmount": 1355000,
+      "deadline": "2026-12-19",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of empirical studies of hybrid classroom pedagogies. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Bezos Earth Fund Bulletin",
+      "category": "Education",
+      "url": "https://bezosearthfund.org/opportunities/grant_129",
+      "status": "active",
+      "funderId": "f_bezos",
+      "funderName": "Bezos Earth Fund",
+      "extractedKeywords": [
+        "empirical",
+        "education",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in empirical studies of hybrid classroom pedagogies that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to empirical studies of hybrid classroom pedagogies that fall squarely within Education boundaries."
+    },
+    {
+      "id": "g_gen_31",
+      "title": "National Science Foundation - Public Transportation Mapping in Metropolises Research Call",
+      "subject": "Public Transportation Mapping in Metropolises, Social Sciences Research, Applied Methods",
+      "fundingAmount": 1400000,
+      "deadline": "2026-08-20",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Individual postgraduate students",
+        "PhD candidates"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of public transportation mapping in metropolises. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "National Science Foundation Bulletin",
+      "category": "Social Sciences",
+      "url": "https://nsf.gov/opportunities/grant_130",
+      "status": "active",
+      "funderId": "f_nsf",
+      "funderName": "National Science Foundation (NSF)",
+      "extractedKeywords": [
+        "public",
+        "social sciences",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in public transportation mapping in metropolises that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to public transportation mapping in metropolises that fall squarely within Social Sciences boundaries."
+    },
+    {
+      "id": "g_gen_32",
+      "title": "National Institutes of Health - Cardiovascular Risk Assessment Using Smartwatch Data Research Call",
+      "subject": "Cardiovascular Risk Assessment Using Smartwatch Data, Health Research, Applied Methods",
+      "fundingAmount": 1445000,
+      "deadline": "2026-09-21",
+      "eligibleRegions": [
+        "United States",
+        "European Union"
+      ],
+      "eligibleOrgTypes": [
+        "Higher Education institutions",
+        "Non-profit research organizations"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of cardiovascular risk assessment using smartwatch data. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "National Institutes of Health Bulletin",
+      "category": "Health",
+      "url": "https://nih.gov/opportunities/grant_131",
+      "status": "active",
+      "funderId": "f_nih",
+      "funderName": "National Institutes of Health (NIH)",
+      "extractedKeywords": [
+        "cardiovascular",
+        "health",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in cardiovascular risk assessment using smartwatch data that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to cardiovascular risk assessment using smartwatch data that fall squarely within Health boundaries."
+    },
+    {
+      "id": "g_gen_33",
+      "title": "Department of Energy - Quantum Dot Solar Cells for High Efficiency Research Call",
+      "subject": "Quantum Dot Solar Cells for High Efficiency, Energy Research, Applied Methods",
+      "fundingAmount": 1490000,
+      "deadline": "2026-10-22",
+      "eligibleRegions": [
+        "Global"
+      ],
+      "eligibleOrgTypes": [
+        "Small Businesses",
+        "Corporate Research labs"
+      ],
+      "description": "A comprehensive research and implementation call to investigate innovative methods, tools, and theoretical models in the space of quantum dot solar cells for high efficiency. The project expects high feasibility, multidisciplinary collaboration, and measurable real-world milestones.",
+      "source": "Department of Energy Bulletin",
+      "category": "Energy",
+      "url": "https://energy.gov/opportunities/grant_132",
+      "status": "active",
+      "funderId": "f_doe",
+      "funderName": "Department of Energy (DOE)",
+      "extractedKeywords": [
+        "quantum",
+        "energy",
+        "research"
+      ],
+      "objectives": "To investigate, design, and validate state-of-the-art frameworks, theoretical models, and empirical tools in quantum dot solar cells for high efficiency that overcome key performance bottlenecks.",
+      "requiredOutcomes": "1. A fully peer-reviewed technical paper in high-impact journals.\n2. Open-source repositories containing datasets or algorithmic models.\n3. Scalable pilot deployment showing measurable performance improvements.",
+      "scope": "Proposals must address core computational, scientific, or social methodologies related to quantum dot solar cells for high efficiency that fall squarely within Energy boundaries."
+    }
+  ],
+  "matches": [
+    {
+      "grantId": "g_seed_1",
+      "userId": "usr_demo",
+      "matchScore": 95,
+      "rationale": "Your background as a Principal Investigator with research interests in Artificial Intelligence and STEM aligns exceptionally well with the core objectives of this NSF grant. The funding amount of $750,000 comfortably exceeds your minimum target of $500,000, and your institutional profile satisfies all eligibility criteria. As you have no prior feedback history recorded, this score is based purely on the strong semantic match across subject matter, organization type, and funding requirements.",
+      "isGemini": true,
+      "relevanceBreakdown": {
+        "subject": 38,
+        "eligibility": 29,
+        "amount": 15,
+        "urgency": 13
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_2",
+      "userId": "usr_demo",
+      "matchScore": 55,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $1,200,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_3",
+      "userId": "usr_demo",
+      "matchScore": 51,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research) and your academic publications/projects. Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $147,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 21,
+        "eligibility": 15,
+        "amount": 5,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_4",
+      "userId": "usr_demo",
+      "matchScore": 55,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $600,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_5",
+      "userId": "usr_demo",
+      "matchScore": 55,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $900,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_6",
+      "userId": "usr_demo",
+      "matchScore": 55,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Research centers'. This call welcomes applications from United States. Funding amount is $2,500,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_7",
+      "userId": "usr_demo",
+      "matchScore": 76,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research) and your academic publications/projects. Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $3,200,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 21,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_8",
+      "userId": "usr_demo",
+      "matchScore": 57,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Academic hospitals'. This call welcomes applications from United States. Funding amount is $1,800,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 12
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_9",
+      "userId": "usr_demo",
+      "matchScore": 57,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Community non-profits'. This call welcomes applications from United States. Funding amount is $500,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 12
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_10",
+      "userId": "usr_demo",
+      "matchScore": 50,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Academic institutes'. This call welcomes applications from United States. Funding amount is $450,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 10,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_11",
+      "userId": "usr_demo",
+      "matchScore": 40,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Industrial corporations. This call welcomes applications from United States. Funding amount is $4,500,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_12",
+      "userId": "usr_demo",
+      "matchScore": 55,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Universities'. This call welcomes applications from United States. Funding amount is $3,000,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_13",
+      "userId": "usr_demo",
+      "matchScore": 55,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Consortia of Academic + Corporate entities'. This call welcomes applications from United States. Funding amount is $5,000,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_14",
+      "userId": "usr_demo",
+      "matchScore": 40,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Universities'. Region constraints suggest focus on European Union, Associated Countries. Funding amount is $4,200,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_15",
+      "userId": "usr_demo",
+      "matchScore": 30,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Postgraduate scholars. This call welcomes applications from United States. Funding amount is $185,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 15,
+        "amount": 5,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_16",
+      "userId": "usr_demo",
+      "matchScore": 35,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Non-profits. This call welcomes applications from United States. Funding amount is $100,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 15,
+        "amount": 5,
+        "urgency": 15
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_17",
+      "userId": "usr_demo",
+      "matchScore": 57,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Universities'. This call welcomes applications from United States. Funding amount is $500,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 12
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_18",
+      "userId": "usr_demo",
+      "matchScore": 45,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Early-career university professors'. This call welcomes applications from United States. Funding amount is $60,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 5,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_19",
+      "userId": "usr_demo",
+      "matchScore": 45,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Academic institutions'. This call welcomes applications from United States. Funding amount is $120,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 5,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_20",
+      "userId": "usr_demo",
+      "matchScore": 40,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Mid-career researchers'. Region constraints suggest focus on United Kingdom, Low-and-Middle Income Countries. Funding amount is $1,500,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_21",
+      "userId": "usr_demo",
+      "matchScore": 30,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is PhD students. This call welcomes applications from United States. Funding amount is $48,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 15,
+        "amount": 5,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_seed_22",
+      "userId": "usr_demo",
+      "matchScore": 40,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Ecology consortia'. Region constraints suggest focus on Latin America, Sub-Saharan Africa, Southeast Asia. Funding amount is $3,500,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_1",
+      "userId": "usr_demo",
+      "matchScore": 52,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $50,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 5,
+        "urgency": 12
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_2",
+      "userId": "usr_demo",
+      "matchScore": 65,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $95,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 5,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_3",
+      "userId": "usr_demo",
+      "matchScore": 50,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $140,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 5,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_4",
+      "userId": "usr_demo",
+      "matchScore": 50,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $185,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 5,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_5",
+      "userId": "usr_demo",
+      "matchScore": 65,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $230,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 5,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_6",
+      "userId": "usr_demo",
+      "matchScore": 57,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $275,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 10,
+        "urgency": 12
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_7",
+      "userId": "usr_demo",
+      "matchScore": 55,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $320,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 10,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_8",
+      "userId": "usr_demo",
+      "matchScore": 70,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $365,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 10,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_9",
+      "userId": "usr_demo",
+      "matchScore": 55,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $410,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 10,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_10",
+      "userId": "usr_demo",
+      "matchScore": 57,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research) and your academic publications/projects. Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $455,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 22,
+        "eligibility": 15,
+        "amount": 10,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_11",
+      "userId": "usr_demo",
+      "matchScore": 75,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $500,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_12",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $545,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_13",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $590,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_14",
+      "userId": "usr_demo",
+      "matchScore": 75,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $635,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_15",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $680,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_16",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $725,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_17",
+      "userId": "usr_demo",
+      "matchScore": 75,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $770,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_18",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $815,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_19",
+      "userId": "usr_demo",
+      "matchScore": 62,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research) and your academic publications/projects. Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $860,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 22,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_20",
+      "userId": "usr_demo",
+      "matchScore": 75,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $905,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_21",
+      "userId": "usr_demo",
+      "matchScore": 62,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $950,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 12
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_22",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $995,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_23",
+      "userId": "usr_demo",
+      "matchScore": 75,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $1,040,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_24",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $1,085,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_25",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $1,130,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_26",
+      "userId": "usr_demo",
+      "matchScore": 77,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $1,175,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 12
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_27",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $1,220,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_28",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $1,265,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_29",
+      "userId": "usr_demo",
+      "matchScore": 75,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $1,310,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_30",
+      "userId": "usr_demo",
+      "matchScore": 62,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research) and your academic publications/projects. Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $1,355,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 22,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_31",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Individual postgraduate students. This call welcomes applications from United States. Funding amount is $1,400,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_32",
+      "userId": "usr_demo",
+      "matchScore": 75,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $1,445,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_gen_33",
+      "userId": "usr_demo",
+      "matchScore": 60,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Note: Organization target is Small Businesses. This call welcomes applications from United States. Funding amount is $1,490,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 20,
+        "eligibility": 15,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_scr_sim_1792153216214_1",
+      "userId": "usr_demo",
+      "matchScore": 55,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Healthcare providers'. This call welcomes applications from United States. Funding amount is $850,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    },
+    {
+      "grantId": "g_scr_sim_1792153216214_0",
+      "userId": "usr_demo",
+      "matchScore": 55,
+      "rationale": "Matched based on keyword overlap and semantic similarity with your research interests (artificial intelligence, neuroscience, stem research). Your profile matches the funding target organization of 'Higher Education institutions'. This call welcomes applications from United States. Funding amount is $1,500,000 against your requested minimum of $500,000.",
+      "isGemini": false,
+      "relevanceBreakdown": {
+        "subject": 0,
+        "eligibility": 30,
+        "amount": 15,
+        "urgency": 10
+      },
+      "feedback": null
+    }
+  ],
+  "notifications": [
+    {
+      "id": "not_seed_1",
+      "userId": "usr_demo",
+      "title": "Welcome to GrantSeeker Intelligence!",
+      "message": "Your smart profile for role [academic] is active. The intelligence agent has begun matching 50+ real-time grant calls to your needs.",
+      "date": "2026-10-16T12:08:34.972Z",
+      "read": true,
+      "type": "new_grant"
+    },
+    {
+      "id": "not_seed_2",
+      "userId": "usr_demo",
+      "title": "High-Match Grant Opportunity Identified",
+      "message": "Advanced AI and Machine Learning Foundations (NSF 26-501) matches your research profile with a 95% compatibility score.",
+      "date": "2026-10-16T12:15:00.000Z",
+      "read": false,
+      "type": "match_alert",
+      "grantId": "g_seed_1"
+    },
+    {
+      "id": "not_seed_3",
+      "userId": "usr_demo",
+      "title": "Upcoming Deadline Notice",
+      "message": "NIH R01 application cycle deadline is approaching in 30 days. Review required compliance items.",
+      "date": "2026-10-16T13:00:00.000Z",
+      "read": false,
+      "type": "deadline",
+      "grantId": "g_seed_6"
+    }
+  ],
+  "applications": [
+    {
+      "id": "app_1",
+      "userId": "usr_demo",
+      "grantId": "g_seed_1",
+      "grantTitle": "Advanced AI and Machine Learning Foundations (NSF 26-501)",
+      "funderName": "National Science Foundation (NSF)",
+      "amount": 750000,
+      "deadline": "2026-10-15",
+      "status": "submitted",
+      "submittedDate": "2026-06-15",
+      "notes": "Submitted project proposal with computing consortium. Awaiting selection committee feedback.",
+      "history": [
+        {
+          "id": "trans_seed_1_1",
+          "status": "draft",
+          "timestamp": "2026-06-01T09:00:00Z",
+          "notes": "Saved grant to tracker. Initial draft formulated targeting core AI/ML algorithms and neural architecture search scaling.",
+          "actor": "Dr. David Anderson"
+        },
+        {
+          "id": "trans_seed_1_2",
+          "status": "submitted",
+          "timestamp": "2026-06-15T14:30:00Z",
+          "notes": "Completed multi-university consortium review and formally submitted the full proposal to the NSF FastLane portal.",
+          "actor": "Dr. David Anderson"
+        }
+      ]
+    },
+    {
+      "id": "app_2",
+      "userId": "usr_demo",
+      "grantId": "g_seed_16",
+      "grantTitle": "Grand Challenges: Generative AI for Global Health Equity",
+      "funderName": "Bill & Melinda Gates Foundation",
+      "amount": 100000,
+      "deadline": "2026-07-04",
+      "status": "draft",
+      "notes": "Developing local generative chatbot framework. Partnering with community health hubs in Nigeria.",
+      "history": [
+        {
+          "id": "trans_seed_2_1",
+          "status": "draft",
+          "timestamp": "2026-06-25T10:15:00Z",
+          "notes": "Added opportunity to workspace. Outlining partnership parameters with health research clinics in Abuja.",
+          "actor": "Dr. David Anderson"
+        }
+      ]
+    },
+    {
+      "id": "app_3",
+      "userId": "usr_demo",
+      "grantId": "g_seed_10",
+      "grantTitle": "National Institute on Aging: Bioinformatics Infrastructure Enhancement",
+      "funderName": "National Institutes of Health (NIH)",
+      "amount": 450000,
+      "deadline": "2026-09-28",
+      "status": "awarded",
+      "submittedDate": "2026-05-10",
+      "notes": "Awarded! Initial kick-off scheduled next week. Setting up genomic compute clusters.",
+      "history": [
+        {
+          "id": "trans_seed_3_1",
+          "status": "draft",
+          "timestamp": "2026-04-10T08:00:00Z",
+          "notes": "Saved opportunity. Initiated outline of bioinformatics storage hardware and dynamic GPU cluster sizing plans.",
+          "actor": "Dr. David Anderson"
+        },
+        {
+          "id": "trans_seed_3_2",
+          "status": "submitted",
+          "timestamp": "2026-05-10T11:00:00Z",
+          "notes": "Formally filed proposal via standard eRA Commons gateway. Status set to: Under Review.",
+          "actor": "Dr. David Anderson"
+        },
+        {
+          "id": "trans_seed_3_3",
+          "status": "awarded",
+          "timestamp": "2026-06-28T16:00:00Z",
+          "notes": "Award notice received! NIH Program officer confirmed full $450,000 disbursement. Project initiation active.",
+          "actor": "Dr. David Anderson"
+        }
+      ]
+    }
+  ],
+  "scraperLogs": [
+    {
+      "id": "scr_1792153216214",
+      "timestamp": "2026-10-16T12:20:16.214Z",
+      "source": "System Orchestrator: Daily Scrapers",
+      "status": "success",
+      "itemsExtracted": 2,
+      "message": "Successfully parsed target source. Discovered 2 new matching grants: [DeepSpace Astrophysics Computational Clusters (NSF 26-612), Epidemiological Mapping for Emerging Zoonotic Risks]"
+    },
+    {
+      "id": "log_init",
+      "timestamp": "2026-10-16T12:08:34.972Z",
+      "source": "System Orchestrator Initialization",
+      "status": "success",
+      "itemsExtracted": 52,
+      "message": "Successfully seeded database with 52 grant intelligence entries."
+    }
+  ],
+  "consortia": [],
+  "teamMessages": [],
+  "teamSharedGrants": []
+}

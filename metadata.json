@@ -1,0 +1,6 @@
+{
+  "name": "Grant Scouting Intelligence System",
+  "description": "An AI-powered grant scouting intelligence system that aggregates funding calls, matches candidates based on qualifications, and provides alerts, scheduling, and insights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
