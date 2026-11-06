@@ -58,6 +58,14 @@ export interface Grant {
   /** active: open; expired: closed or past deadline; archived: filed away */
   lifecycle: GrantLifecycle;
   archivedAt?: string | null;
+  /** When the call ended: the earlier of its deadline and the day it closed */
+  endedOn: string | null;
+  /** Archived because it ended over 30 days ago (cannot be restored) */
+  archivedByAge: boolean;
+  /** Editions of this call seen so far, this one included */
+  editionCount: number;
+  /** The next cycle of this call, when the funder has published one */
+  newerEditionId: string | null;
   funderId: string;
   funderName: string;
   extractedKeywords: string[];
@@ -128,16 +136,37 @@ export interface ScraperLog {
   message?: string;
 }
 
+export interface HarvestStatus {
+  sourcesCount: number;
+  running: boolean;
+  lastRunAt: string | null;
+  lastRunStatus: 'ok' | 'partial' | 'failed' | null;
+  lastSuccessAt: string | null;
+  lastRunNewCalls: number;
+}
+
 export interface DashboardStats {
   totalActiveGrants: number;
   totalFundingAvailable: number;
   averageGrantAmount: number;
+  /** Open calls closing within criticalDeadlineDays */
   upcomingDeadlinesCount: number;
+  upcomingDeadlinesFunding: number;
+  dueThisWeekCount: number;
+  criticalDeadlineDays: number;
+  /** Open calls that state an award amount (the pool and average use only these) */
+  fundedGrantsCount: number;
+  activeFundersCount: number;
+  newThisWeekCount: number;
+  harvest: HarvestStatus | null;
+  generatedAt: string;
   /** Closed or past deadline, not yet archived */
   expiredGrantsCount: number;
   expiredFunding: number;
-  /** Expired within the last 30 days */
-  expiredRecentCount: number;
+  /** Expired calls that move to the archive within the next 7 days */
+  archivingSoonCount: number;
+  /** Days after a call ends before it is archived */
+  archiveAfterDays: number;
   archivedGrantsCount: number;
   matchedGrantsCount: number;
   /** null until at least one proposal is awarded or rejected */
@@ -366,4 +395,54 @@ export interface AccessReview {
   totalUsers: number;
   privileged: (Pick<AdminUser, 'id' | 'name' | 'email' | 'accessRole' | 'organization' | 'lastLoginAt' | 'createdAt' | 'suspendedAt'> & { dormant: boolean })[];
   counts: { super_admin: number; institution_admin: number; grant_officer: number; dormant: number };
+}
+
+/* Call history: every edition of a recurring call and what changed */
+
+export interface CallEdition {
+  key: string;
+  grantId: string;
+  /** listing: a call in the catalogue; revision: an earlier version of a call's page */
+  kind: 'listing' | 'revision';
+  title: string;
+  funderName: string | null;
+  category: string | null;
+  amount: number | null;
+  currency: string;
+  deadline: string | null;
+  eligibleRegions: string[];
+  eligibleOrgTypes: string[];
+  lifecycle: GrantLifecycle | 'superseded';
+  url: string;
+  referenceCodes: string[];
+  seenAt: string | null;
+  isCurrent: boolean;
+  duplicateIds: string[];
+}
+
+export type CallFieldChange =
+  | { field: string; label: string; kind: 'value'; before: string | null; after: string | null }
+  | { field: string; label: string; kind: 'list'; added: string[]; removed: string[] }
+  | {
+      field: string;
+      label: string;
+      kind: 'text';
+      similarity: number;
+      before: string | null;
+      after: string | null;
+      addedTerms: string[];
+      removedTerms: string[];
+    };
+
+export interface CallComparison {
+  from: string;
+  to: string;
+  highlights: string[];
+  changes: CallFieldChange[];
+}
+
+export interface CallHistory {
+  current: string;
+  editions: CallEdition[];
+  comparisons: CallComparison[];
 }

@@ -20,6 +20,8 @@ GRANT SELECT ON funders TO gs_worker;
 -- Structured profiles: scored against new grants. Never the uploaded documents.
 GRANT SELECT ON applicant_profiles TO gs_worker;
 GRANT SELECT, INSERT, UPDATE ON grants, grant_matches, scraper_runs TO gs_worker;
+-- History: earlier versions of a call, saved before a re-scrape overwrites it.
+GRANT SELECT, INSERT ON grant_revisions TO gs_worker;
 GRANT INSERT ON notifications, audit_log TO gs_worker;
 -- Matching inputs only: never email, password or session fields.
 GRANT SELECT (id, org_id, role, persona, region, research_interests, qualifications,
@@ -275,3 +277,30 @@ BEGIN
 END $$;
 REVOKE ALL ON FUNCTION app.purge_expired_refresh_tokens() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION app.purge_expired_refresh_tokens() TO gs_worker;
+
+/* ---------------------------------------------------------------- */
+/* Live dashboard: tell the API when catalogue data changes          */
+/* ---------------------------------------------------------------- */
+
+-- Statement-level, so a harvest batch sends one notice per statement and
+-- Postgres folds identical notices within a transaction. The API debounces
+-- and pushes a "changed" event to open dashboards (GET /api/grants/live).
+CREATE OR REPLACE FUNCTION app.notify_grants_changed() RETURNS trigger
+  LANGUAGE plpgsql
+  SET search_path = public, pg_temp
+  AS $$
+BEGIN
+  PERFORM pg_notify('grants_changed', TG_TABLE_NAME);
+  RETURN NULL;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS grants_changed_notify ON grants;
+CREATE TRIGGER grants_changed_notify AFTER INSERT OR UPDATE OR DELETE ON grants
+  FOR EACH STATEMENT EXECUTE FUNCTION app.notify_grants_changed();
+DROP TRIGGER IF EXISTS grant_matches_changed_notify ON grant_matches;
+CREATE TRIGGER grant_matches_changed_notify AFTER INSERT OR UPDATE OR DELETE ON grant_matches
+  FOR EACH STATEMENT EXECUTE FUNCTION app.notify_grants_changed();
+DROP TRIGGER IF EXISTS scraper_runs_changed_notify ON scraper_runs;
+CREATE TRIGGER scraper_runs_changed_notify AFTER INSERT OR UPDATE ON scraper_runs
+  FOR EACH STATEMENT EXECUTE FUNCTION app.notify_grants_changed();

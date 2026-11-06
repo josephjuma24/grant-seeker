@@ -378,6 +378,21 @@ export const funders = pgTable(
   ],
 );
 
+// Bare column names: a generation expression may not qualify them.
+// \m and \M are word boundaries in Postgres regular expressions.
+const SERIES_KEY_SQL = `coalesce(funder_id::text, source, '') || '|' || btrim(
+  regexp_replace(
+    regexp_replace(
+      regexp_replace(
+        regexp_replace(
+          regexp_replace(
+            regexp_replace(lower(title), '\\m(19|20)[0-9]{2}(\\s*[/-]\\s*(19|20)?[0-9]{2})?\\M', ' ', 'g'),
+          '\\mfy\\s*[0-9]{2,4}\\M', ' ', 'g'),
+        '\\m(round|cycle|call|phase|cohort|edition|wave|batch|intake)\\s+([0-9]+|[ivx]+)\\M', ' \\1 ', 'g'),
+      '\\m[0-9]+(st|nd|rd|th)\\M', ' ', 'g'),
+    'programme', 'program', 'g'),
+  '[^a-z0-9]+', ' ', 'g'))`;
+
 export const grants = pgTable(
   'grants',
   {
@@ -397,6 +412,9 @@ export const grants = pgTable(
     eligibleRegions: text('eligible_regions').array().notNull().default(sql`'{}'::text[]`),
     eligibleOrgTypes: text('eligible_org_types').array().notNull().default(sql`'{}'::text[]`),
     status: grantStatusEnum('status').notNull().default('active'),
+    // When the call was first seen closed. With the deadline it gives the
+    // call's end date, from which the 30-day archive rule counts.
+    closedAt: timestamp('closed_at', { withTimezone: true }),
     // Set when an expired call is archived: it leaves the expired list as
     // well as every active view. Cleared on restore.
     archivedAt: timestamp('archived_at', { withTimezone: true }),
@@ -414,10 +432,15 @@ export const grants = pgTable(
         setweight(to_tsvector('english', coalesce(description, '')), 'C')`,
     ),
     scrapedAt: timestamp('scraped_at', { withTimezone: true }),
+    // One key per recurring call: funder (or source) + title with years,
+    // fiscal years and round/cycle numbers stripped. Every edition of
+    // "X Programme 2025" and "X Program FY2026" shares it.
+    seriesKey: text('series_key').generatedAlwaysAs(sql.raw(SERIES_KEY_SQL)),
     ...timestamps,
   },
   (t) => [
     index('grants_deadline_idx').on(t.deadline),
+    index('grants_series_idx').on(t.seriesKey),
     index('grants_status_idx').on(t.status),
     index('grants_archived_idx').on(t.archivedAt),
     index('grants_funder_idx').on(t.funderId),
@@ -431,6 +454,45 @@ export const grants = pgTable(
       using: atLeast(ROLE_LEVEL.super_admin),
     }),
     pgPolicy('grants_write_worker', { for: 'all', to: workerRole, using: sql`true` }),
+  ],
+);
+
+/** What a call looked like before the harvester overwrote it. */
+export type GrantSnapshot = {
+  title: string;
+  description: string;
+  objectives: string | null;
+  requiredOutcomes: string | null;
+  scope: string | null;
+  category: string | null;
+  amount: number | null;
+  currency: string;
+  deadline: string | null;
+  eligibleRegions: string[];
+  eligibleOrgTypes: string[];
+  keywords: string[];
+  status: 'active' | 'closed';
+  scrapedAt: string | null;
+};
+
+// Earlier versions of a call published under the same URL (funders often
+// reuse one page for every cycle). Written by the harvester before it
+// overwrites the row, so the call's history survives.
+export const grantRevisions = pgTable(
+  'grant_revisions',
+  {
+    id: id(),
+    grantId: uuid('grant_id')
+      .notNull()
+      .references(() => grants.id, { onDelete: 'cascade' }),
+    capturedAt: timestamp('captured_at', { withTimezone: true }).notNull().defaultNow(),
+    snapshot: jsonb('snapshot').$type<GrantSnapshot>().notNull(),
+  },
+  (t) => [
+    index('grant_revisions_grant_idx').on(t.grantId, t.capturedAt),
+    pgPolicy('grant_revisions_read', { for: 'select', to: [appRole, workerRole], using: sql`true` }),
+    pgPolicy('grant_revisions_write_app', { for: 'all', to: appRole, using: atLeast(ROLE_LEVEL.super_admin) }),
+    pgPolicy('grant_revisions_write_worker', { for: 'insert', to: workerRole, withCheck: sql`true` }),
   ],
 );
 

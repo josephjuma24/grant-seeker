@@ -58,7 +58,9 @@ import {
   UserPlus,
   Archive,
   ArchiveRestore,
-  CalendarX
+  CalendarX,
+  History as HistoryIcon,
+  Repeat
 } from 'lucide-react';
 
 import { 
@@ -80,6 +82,8 @@ import {
   TeamSharedGrant,
   StatusTransition
 } from './types';
+import { CallHistory } from './components/CallHistory';
+import { ARCHIVE_AFTER_DAYS, CRITICAL_DEADLINE_DAYS, daysUntilArchive } from '../shared/grantLifecycle';
 import { api, ApiError, onSessionExpired } from './api';
 import ResearchOffice from './components/ResearchOffice';
 import SmartProfile from './components/SmartProfile';
@@ -89,21 +93,54 @@ import AccountMenu from './components/AccountMenu';
 import GeneralSettings from './components/GeneralSettings';
 import { grantMatchesRegionFilter, REGION_FILTERS } from '../shared/regions';
 
-// --- Historical 12-Month Funding & Seasonality Data ---
-const FUNDING_TRENDS_DATA = [
-  { month: 'Jul 25', funding: 3800000, activeGrants: 12, Tech: 1500000, Health: 1200000, Energy: 1100000, Education: 200000, SocialSciences: 100000 },
-  { month: 'Aug 25', funding: 4200000, activeGrants: 15, Tech: 1800000, Health: 1400000, Energy: 1000000, Education: 300000, SocialSciences: 200000 },
-  { month: 'Sep 25', funding: 8900000, activeGrants: 28, Tech: 4200000, Health: 2500000, Energy: 2200000, Education: 400000, SocialSciences: 300000 }, // Fall peak
-  { month: 'Oct 25', funding: 6100000, activeGrants: 20, Tech: 2700000, Health: 1800000, Energy: 1600000, Education: 500000, SocialSciences: 400000 },
-  { month: 'Nov 25', funding: 4500000, activeGrants: 16, Tech: 2100000, Health: 1300000, Energy: 1100000, Education: 300000, SocialSciences: 200000 },
-  { month: 'Dec 25', funding: 2100000, activeGrants: 8,  Tech: 900000,  Health: 700000,  Energy: 500000,  Education: 150000, SocialSciences: 50000 },  // Winter low
-  { month: 'Jan 26', funding: 5500000, activeGrants: 19, Tech: 2400000, Health: 1600000, Energy: 1500000, Education: 400000, SocialSciences: 300000 },
-  { month: 'Feb 26', funding: 7200000, activeGrants: 24, Tech: 3200000, Health: 2100000, Energy: 1900000, Education: 600000, SocialSciences: 400000 },
-  { month: 'Mar 26', funding: 11200000, activeGrants: 35, Tech: 5100000, Health: 3800000, Energy: 2300000, Education: 800000, SocialSciences: 500000 }, // Spring peak
-  { month: 'Apr 26', funding: 6800000, activeGrants: 22, Tech: 3100000, Health: 2000000, Energy: 1700000, Education: 400000, SocialSciences: 300000 },
-  { month: 'May 26', funding: 5100000, activeGrants: 17, Tech: 2200000, Health: 1500000, Energy: 1400000, Education: 300000, SocialSciences: 200000 },
-  { month: 'Jun 26', funding: 9500000, activeGrants: 31, Tech: 4100000, Health: 2900000, Energy: 2500000, Education: 600000, SocialSciences: 400000 }, // Summer peak
-];
+/** "just now", "5 min ago", "3 h ago", "2 d ago". */
+function timeAgo(when: string | number, now: number): string {
+  const secs = Math.max(0, Math.round((now - new Date(when).getTime()) / 1000));
+  if (secs < 45) return 'just now';
+  const mins = Math.round(secs / 60);
+  if (mins < 60) return `${mins} min ago`;
+  const hours = Math.round(mins / 60);
+  if (hours < 48) return `${hours} h ago`;
+  return `${Math.round(hours / 24)} d ago`;
+}
+
+// --- Funding seasonality: real calls by deadline month ---
+// Six months back, this month and five ahead, from every call the agents
+// have found (expired and archived ones included, so past months are real).
+type TrendPoint = { month: string; funding: number; activeGrants: number; Tech: number; Health: number; Energy: number; Education: number; SocialSciences: number };
+const TREND_CATEGORY: Record<string, keyof TrendPoint> = {
+  technology: 'Tech',
+  tech: 'Tech',
+  health: 'Health',
+  energy: 'Energy',
+  education: 'Education',
+  'social sciences': 'SocialSciences',
+};
+function buildFundingTrends(grants: Grant[], now: number): TrendPoint[] {
+  const today = new Date(now);
+  const months: TrendPoint[] = [];
+  const index = new Map<string, TrendPoint>();
+  for (let i = -6; i <= 5; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth() + i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    const point: TrendPoint = {
+      month: d.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }),
+      funding: 0, activeGrants: 0, Tech: 0, Health: 0, Energy: 0, Education: 0, SocialSciences: 0,
+    };
+    months.push(point);
+    index.set(key, point);
+  }
+  for (const g of grants) {
+    const point = g.deadline ? index.get(g.deadline.slice(0, 7)) : undefined;
+    if (!point) continue;
+    const amount = g.fundingAmount > 0 ? g.fundingAmount : 0;
+    point.activeGrants += 1;
+    point.funding += amount;
+    const cat = TREND_CATEGORY[g.category.toLowerCase()];
+    if (cat) (point[cat] as number) += amount;
+  }
+  return months;
+}
 
 // --- Helper Markdown Renderer ---
 function renderInlineBold(text: string): React.ReactNode[] {
@@ -715,6 +752,62 @@ export default function App() {
     document.getElementById('assistant-workspace')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  // --- Live dashboard ---
+  // The API pushes a "change" event whenever the harvester, housekeeping or
+  // an admin changes catalogue data; the dashboard re-fetches at once. A slow
+  // poll and a refresh on tab focus cover midnight roll-overs (deadlines pass
+  // with no write) and a dropped connection.
+  const [liveState, setLiveState] = useState<'connecting' | 'live' | 'offline'>('connecting');
+  const [statsUpdatedAt, setStatsUpdatedAt] = useState<number | null>(null);
+  const [clock, setClock] = useState(() => Date.now());
+  useEffect(() => {
+    if (analytics) setStatsUpdatedAt(Date.now());
+  }, [analytics]);
+  useEffect(() => {
+    const t = setInterval(() => setClock(Date.now()), 15_000);
+    return () => clearInterval(t);
+  }, []);
+  useEffect(() => {
+    if (!authed) return;
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let last = 0;
+    const refresh = () => {
+      if (timer) return; // one refresh already queued
+      const wait = Math.max(0, 3_000 - (Date.now() - last));
+      timer = setTimeout(async () => {
+        timer = undefined;
+        last = Date.now();
+        const [g, m, st] = await Promise.allSettled([api.allGrants(), api.matches(), api.stats()]);
+        if (cancelled) return;
+        if (g.status === 'fulfilled') setGrants(g.value);
+        if (m.status === 'fulfilled') setMatches(m.value);
+        if (st.status === 'fulfilled') setAnalytics(st.value);
+      }, wait);
+    };
+    let source: EventSource | null = null;
+    try {
+      source = new EventSource('/api/grants/live');
+      source.addEventListener('ready', () => setLiveState('live'));
+      source.addEventListener('change', refresh);
+      source.onerror = () => setLiveState('offline'); // EventSource reconnects by itself
+    } catch {
+      setLiveState('offline');
+    }
+    const poll = setInterval(refresh, 5 * 60_000);
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') refresh();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+      clearInterval(poll);
+      document.removeEventListener('visibilitychange', onVisible);
+      source?.close();
+    };
+  }, [authed]);
+
   // Refresh the automatic-scan status while the scraper panel is open.
   useEffect(() => {
     if (!authed || !isSuperAdmin || activeTab !== 'scraper') return;
@@ -888,6 +981,13 @@ export default function App() {
     }
   };
 
+  // Opens another edition of a call (from the call history or a "repeated" badge).
+  const openGrantById = (grantId: string) => {
+    const g = grants.find(x => x.id === grantId);
+    if (g) handleOpenGrantDetail(g);
+    else triggerToast('That edition is not in the loaded catalogue.', 'info');
+  };
+
   // --- Save Match Relevance Feedback ---
   const handleSaveFeedback = async (grantId: string, feedback: 'relevant' | 'not_relevant' | null) => {
     if (!authed) return;
@@ -1001,14 +1101,26 @@ export default function App() {
     return notifications.filter(n => !n.read).length;
   }, [notifications]);
 
-  // Critical countdown list (Top 3 closest deadlines)
+  const fundingTrends = useMemo(() => buildFundingTrends(grants, clock), [grants, clock]);
+  const trendKey: keyof TrendPoint =
+    trendCategory === 'all' ? 'funding' : trendCategory === 'activeGrants' ? 'activeGrants' : (trendCategory as keyof TrendPoint);
+  const trendExtremes = useMemo(() => {
+    const ranked = [...fundingTrends].sort((a, b) => (b[trendKey] as number) - (a[trendKey] as number));
+    const withData = ranked.filter(p => (p[trendKey] as number) > 0);
+    return { peaks: withData.slice(0, 2).map(p => p.month), low: ranked[ranked.length - 1]?.month ?? '—' };
+  }, [fundingTrends, trendKey]);
+
+  // Critical countdown list: open calls closing within CRITICAL_DEADLINE_DAYS, soonest first.
   const sortedUpcomingDeadlines = useMemo(() => {
-    const today = new Date();
+    const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const today = new Date(clock);
+    const from = iso(today);
+    const to = iso(new Date(today.getFullYear(), today.getMonth(), today.getDate() + CRITICAL_DEADLINE_DAYS));
     return grants
-      .filter(g => new Date(g.deadline).getTime() >= today.getTime() && g.lifecycle === 'active')
-      .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
+      .filter(g => g.lifecycle === 'active' && g.deadline && g.deadline >= from && g.deadline <= to)
+      .sort((a, b) => a.deadline.localeCompare(b.deadline))
       .slice(0, 4);
-  }, [grants]);
+  }, [grants, clock]);
 
   if (restoringSession) {
     return (
@@ -1328,13 +1440,28 @@ export default function App() {
                 <div>
                   <h1 className="text-2xl font-black text-gray-900 tracking-tight">Intelligence Dashboard</h1>
                   <p className="text-gray-500 text-sm mt-1">
-                    AI Agent evaluated <span className="font-semibold text-gray-900">{grants.length} funding sources</span>. Matched against your research in <span className="text-blue-600 font-semibold">{user.researchInterests.slice(0, 2).join(', ')}</span>.
+                    AI agents are tracking <span className="font-semibold text-gray-900">{analytics?.totalActiveGrants ?? lifecycleCounts.active} open calls</span> from <span className="font-semibold text-gray-900">{analytics?.activeFundersCount ?? 0} funders</span>
+                    {analytics?.newThisWeekCount ? <> &middot; <span className="font-semibold text-emerald-700">{analytics.newThisWeekCount} new this week</span></> : null}
+                    . Matched against your research in <span className="text-blue-600 font-semibold">{user.researchInterests.slice(0, 2).join(', ')}</span>.
                   </p>
                 </div>
                 <div className="flex gap-4">
                   <div className="bg-white px-4 py-3 rounded-xl border border-gray-200 shadow-sm flex flex-col min-w-[130px]">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">ACTIVE AGENTS</span>
-                    <span className="text-lg font-black text-gray-900 mt-1">10 / 10 Scrapers</span>
+                    <span className="text-lg font-black text-gray-900 mt-1 flex items-center gap-1.5">
+                      <span
+                        className={`w-2 h-2 rounded-full ${analytics?.harvest?.running ? 'bg-blue-500 animate-pulse' : analytics?.harvest?.lastRunStatus === 'failed' ? 'bg-red-500' : analytics?.harvest?.lastRunStatus === 'partial' ? 'bg-amber-500' : 'bg-emerald-500'}`}
+                        aria-hidden="true"
+                      />
+                      {analytics?.harvest ? `${analytics.harvest.sourcesCount} sources` : '—'}
+                    </span>
+                    <span className="text-[10px] text-gray-400 font-semibold mt-0.5">
+                      {analytics?.harvest?.running
+                        ? 'Scanning now…'
+                        : analytics?.harvest?.lastRunAt
+                          ? `Last scan ${timeAgo(analytics.harvest.lastRunAt, clock)}${analytics.harvest.lastRunStatus === 'failed' ? ' (failed)' : analytics.harvest.lastRunStatus === 'partial' ? ' (partial)' : ''}`
+                          : 'No scans yet'}
+                    </span>
                   </div>
                   <div className="bg-white px-4 py-3 rounded-xl border border-gray-200 shadow-sm flex flex-col min-w-[130px]">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">TOP SCORE MATCH</span>
@@ -1352,6 +1479,15 @@ export default function App() {
                   <span className="text-xs font-extrabold text-gray-700">Layout Mode:</span>
                   <span className="text-[11px] text-gray-500 font-semibold">
                     {dashboardLayout === 'compact' ? 'High-level analytics & trends' : 'Comprehensive lists, deadlines & recent activities'}
+                  </span>
+                  <span
+                    id="dashboard-live-status"
+                    className={`ml-2 inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full border ${liveState === 'live' ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-gray-500 bg-gray-50 border-gray-200'}`}
+                    title={liveState === 'live' ? 'Figures update as soon as the agents change the catalogue' : 'Live updates paused; figures refresh every 5 minutes'}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${liveState === 'live' ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'}`} aria-hidden="true" />
+                    {liveState === 'live' ? 'Live' : liveState === 'connecting' ? 'Connecting' : 'Reconnecting'}
+                    {statsUpdatedAt && <span className="font-semibold text-gray-500">· updated {timeAgo(statsUpdatedAt, clock)}</span>}
                   </span>
                 </div>
                 <div className="flex items-center bg-white border border-gray-200 rounded-lg p-0.5 shadow-xs shrink-0 self-start sm:self-auto">
@@ -1383,9 +1519,11 @@ export default function App() {
                   <div>
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Available Pool</span>
                     <h3 className="text-xl font-extrabold text-gray-900 mt-0.5">
-                      ${(analytics?.totalFundingAvailable || 42000000).toLocaleString()}
+                      ${Math.round(analytics?.totalFundingAvailable ?? 0).toLocaleString()}
                     </h3>
-                    <p className="text-xs text-gray-400 mt-1">Active calls pool</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {analytics?.totalActiveGrants ?? 0} open calls · {analytics?.fundedGrantsCount ?? 0} state an amount
+                    </p>
                   </div>
                 </div>
 
@@ -1396,9 +1534,9 @@ export default function App() {
                   <div>
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Avg Award Size</span>
                     <h3 className="text-xl font-extrabold text-gray-900 mt-0.5">
-                      ${Math.round(analytics?.averageGrantAmount || 850000).toLocaleString()}
+                      ${Math.round(analytics?.averageGrantAmount ?? 0).toLocaleString()}
                     </h3>
-                    <p className="text-xs text-gray-400 mt-1">Cap per application</p>
+                    <p className="text-xs text-gray-400 mt-1">Average across {analytics?.fundedGrantsCount ?? 0} open calls</p>
                   </div>
                 </div>
 
@@ -1409,9 +1547,11 @@ export default function App() {
                   <div>
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Critical Deadlines</span>
                     <h3 className="text-xl font-extrabold text-gray-900 mt-0.5">
-                      {analytics?.upcomingDeadlinesCount || 3} Grants
+                      {analytics?.upcomingDeadlinesCount ?? 0} Grants
                     </h3>
-                    <p className="text-xs text-gray-400 mt-1">Due within 45 days</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Due within {analytics?.criticalDeadlineDays ?? CRITICAL_DEADLINE_DAYS} days · {analytics?.dueThisWeekCount ?? 0} this week
+                    </p>
                   </div>
                 </div>
 
@@ -1447,7 +1587,7 @@ export default function App() {
                       {analytics?.expiredGrantsCount ?? 0} Grants
                     </h3>
                     <p className="text-xs text-gray-400 mt-1">
-                      {analytics?.expiredRecentCount ?? 0} in last 30 days · {analytics?.archivedGrantsCount ?? 0} archived
+                      Ended ≤{ARCHIVE_AFTER_DAYS} days ago · {analytics?.archivingSoonCount ?? 0} archive this week · {analytics?.archivedGrantsCount ?? 0} archived
                     </p>
                   </div>
                 </button>
@@ -1704,25 +1844,25 @@ export default function App() {
                 {/* Key Insights Row */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div className="bg-blue-50/50 border border-blue-100 p-4 rounded-xl">
-                    <span className="text-[10px] font-extrabold text-blue-500 uppercase tracking-wider block">Peak Seasons</span>
-                    <span className="text-sm font-black text-blue-900 mt-1 block">September & March</span>
+                    <span className="text-[10px] font-extrabold text-blue-500 uppercase tracking-wider block">Peak Months</span>
+                    <span className="text-sm font-black text-blue-900 mt-1 block">{trendExtremes.peaks.length ? trendExtremes.peaks.join(' & ') : 'No data yet'}</span>
                     <p className="text-[11px] text-blue-700/80 mt-1 leading-relaxed">
-                      Academic cycles trigger massive grant releases. Applications peak in Q1 and Q3.
+                      Months with the most deadlines in the 12-month window, from calls the agents found.
                     </p>
                   </div>
                   <div className="bg-amber-50/50 border border-amber-100 p-4 rounded-xl">
-                    <span className="text-[10px] font-extrabold text-amber-600 uppercase tracking-wider block">Winter Low</span>
-                    <span className="text-sm font-black text-amber-900 mt-1 block">December</span>
+                    <span className="text-[10px] font-extrabold text-amber-600 uppercase tracking-wider block">Quietest Month</span>
+                    <span className="text-sm font-black text-amber-900 mt-1 block">{trendExtremes.low}</span>
                     <p className="text-[11px] text-amber-700/80 mt-1 leading-relaxed">
-                      Typically lowest active opportunity period. Best time to prepare proposals for Q1.
+                      Fewest deadlines in the window: a good time to prepare proposals ahead of busier months.
                     </p>
                   </div>
                   <div className="bg-emerald-50/50 border border-emerald-100 p-4 rounded-xl">
-                    <span className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider block">Annualized Total</span>
+                    <span className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider block">12-Month Total</span>
                     <span className="text-sm font-black text-emerald-900 mt-1 block">
                       {trendCategory === 'activeGrants' 
-                        ? `${FUNDING_TRENDS_DATA.reduce((sum, item) => sum + item.activeGrants, 0)} Opportunities`
-                        : `$${(FUNDING_TRENDS_DATA.reduce((sum, item) => {
+                        ? `${fundingTrends.reduce((sum, item) => sum + item.activeGrants, 0)} Opportunities`
+                        : `$${(fundingTrends.reduce((sum, item) => {
                             if (trendCategory === 'all') return sum + item.funding;
                             if (trendCategory === 'Tech') return sum + item.Tech;
                             if (trendCategory === 'Health') return sum + item.Health;
@@ -1732,14 +1872,20 @@ export default function App() {
                       }
                     </span>
                     <p className="text-[11px] text-emerald-700/80 mt-1 leading-relaxed">
-                      Aggregated portfolio funding pool scanned by active scrapers.
+                      Calls with deadlines in this window, open, expired and archived.
                     </p>
                   </div>
                   <div className="bg-purple-50/50 border border-purple-100 p-4 rounded-xl">
                     <span className="text-[10px] font-extrabold text-purple-600 uppercase tracking-wider block">Scraper Status</span>
-                    <span className="text-sm font-black text-purple-900 mt-1 block">Continuous Sync</span>
+                    <span className="text-sm font-black text-purple-900 mt-1 block">
+                      {analytics?.harvest?.running
+                        ? 'Scanning now…'
+                        : analytics?.harvest?.lastRunAt
+                          ? `Last scan ${timeAgo(analytics.harvest.lastRunAt, clock)}`
+                          : 'No scans yet'}
+                    </span>
                     <p className="text-[11px] text-purple-700/80 mt-1 leading-relaxed">
-                      System dynamically updates trends when new opportunities are detected.
+                      {liveState === 'live' ? 'Live: charts update as soon as the agents add or close calls.' : 'Reconnecting; charts refresh every 5 minutes.'}
                     </p>
                   </div>
                 </div>
@@ -1748,7 +1894,7 @@ export default function App() {
                 <div className="h-[320px] w-full pt-4 pr-4 border border-gray-100 bg-gray-50/20 rounded-xl">
                   <ResponsiveContainer width="100%" height="100%">
                     {trendChartType === 'area' ? (
-                      <AreaChart data={FUNDING_TRENDS_DATA} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                      <AreaChart data={fundingTrends} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                         <defs>
                           <linearGradient id="colorFunding" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
@@ -1794,7 +1940,7 @@ export default function App() {
                         />
                       </AreaChart>
                     ) : trendChartType === 'bar' ? (
-                      <BarChart data={FUNDING_TRENDS_DATA} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                      <BarChart data={fundingTrends} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                         <XAxis 
                           dataKey="month" 
@@ -1827,7 +1973,7 @@ export default function App() {
                         />
                       </BarChart>
                     ) : (
-                      <LineChart data={FUNDING_TRENDS_DATA} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                      <LineChart data={fundingTrends} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                         <XAxis 
                           dataKey="month" 
@@ -1979,8 +2125,8 @@ export default function App() {
                     <div className="flex bg-gray-100 p-1 rounded-lg border border-gray-200" role="tablist" aria-label="Call status">
                       {([
                         { id: 'active', label: 'Active', on: 'text-blue-700' },
-                        { id: 'expired', label: 'Expired', on: 'text-rose-700' },
-                        { id: 'archived', label: 'Archived', on: 'text-gray-800' },
+                        { id: 'expired', label: `Expired ≤${ARCHIVE_AFTER_DAYS}d`, on: 'text-rose-700' },
+                        { id: 'archived', label: `Archived >${ARCHIVE_AFTER_DAYS}d`, on: 'text-gray-800' },
                       ] as const).map(tab => (
                         <button
                           key={tab.id}
@@ -2015,8 +2161,8 @@ export default function App() {
                 {grantLifecycleView !== 'active' && (
                   <p className="text-[11px] text-gray-500">
                     {grantLifecycleView === 'expired'
-                      ? 'Closed or past-deadline calls. They are left out of the dashboard figures and active listings, and are archived automatically 30 days after the deadline.'
-                      : 'Archived calls are kept for reference only. Restoring one returns it to the expired list.'}
+                      ? `Calls that ended in the last ${ARCHIVE_AFTER_DAYS} days (deadline passed or closed by the source). They are left out of the dashboard figures and active listings, and move to the archive once more than ${ARCHIVE_AFTER_DAYS} days have passed since they ended.`
+                      : `Calls that ended more than ${ARCHIVE_AFTER_DAYS} days ago, whether from the source or this system, plus any an admin archived early. Only early archives can be restored to the expired list.`}
                   </p>
                 )}
               </div>
@@ -2226,6 +2372,27 @@ export default function App() {
                               <p className="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed">
                                 {grant.description}
                               </p>
+                              {(grant.editionCount > 1 || grant.newerEditionId) && (
+                                <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                                  {grant.editionCount > 1 && (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-1.5 py-0.5 rounded" title="This call has run before; open it to see what changed">
+                                      <HistoryIcon className="w-3 h-3" /> {grant.editionCount} editions
+                                    </span>
+                                  )}
+                                  {grant.newerEditionId && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        openGrantById(grant.newerEditionId!);
+                                      }}
+                                      className="inline-flex items-center gap-1 text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 hover:bg-green-100 px-1.5 py-0.5 rounded cursor-pointer"
+                                      title="The funder has published a later edition of this call"
+                                    >
+                                      <Repeat className="w-3 h-3" /> Repeated: see new call
+                                    </button>
+                                  )}
+                                </div>
+                              )}
                             </div>
 
                             <div className="border-t border-gray-100 pt-4 mt-4 flex items-center justify-between text-[10px] text-gray-400 font-bold uppercase tracking-wider">
@@ -2235,10 +2402,18 @@ export default function App() {
                               </span>
                               <span className={`flex items-center gap-1 ${grant.lifecycle !== 'active' ? 'text-rose-500' : ''}`}>
                                 <Calendar className="w-3.5 h-3.5 shrink-0" />
-                                {grant.lifecycle !== 'active' ? `Closed ${grant.deadline}` : grant.deadline}
+                                {grant.lifecycle !== 'active' ? `Ended ${grant.endedOn ?? grant.deadline}` : grant.deadline}
                               </span>
+                              {(() => {
+                                const left = grant.lifecycle === 'expired' ? daysUntilArchive(grant.endedOn) : null;
+                                return left != null ? (
+                                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded" title={`Calls move to the archive ${ARCHIVE_AFTER_DAYS} days after they end`}>
+                                    {left <= 1 ? 'Archives tomorrow' : `Archives in ${left} days`}
+                                  </span>
+                                ) : null;
+                              })()}
                             </div>
-                            {isSuperAdmin && grant.lifecycle !== 'active' && (
+                            {isSuperAdmin && grant.lifecycle !== 'active' && !grant.archivedByAge && (
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -2301,6 +2476,27 @@ export default function App() {
                                 <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
                                   {grant.description}
                                 </p>
+                                {(grant.editionCount > 1 || grant.newerEditionId) && (
+                                <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                                  {grant.editionCount > 1 && (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-1.5 py-0.5 rounded" title="This call has run before; open it to see what changed">
+                                      <HistoryIcon className="w-3 h-3" /> {grant.editionCount} editions
+                                    </span>
+                                  )}
+                                  {grant.newerEditionId && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        openGrantById(grant.newerEditionId!);
+                                      }}
+                                      className="inline-flex items-center gap-1 text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 hover:bg-green-100 px-1.5 py-0.5 rounded cursor-pointer"
+                                      title="The funder has published a later edition of this call"
+                                    >
+                                      <Repeat className="w-3 h-3" /> Repeated: see new call
+                                    </button>
+                                  )}
+                                </div>
+                              )}
                               </div>
                             </div>
 
@@ -2316,7 +2512,17 @@ export default function App() {
                                 <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Deadline</div>
                                 <div className="text-xs font-bold text-gray-600 mt-0.5 flex items-center justify-end gap-0.5">
                                   <Calendar className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                                  {grant.deadline}
+                                  {grant.lifecycle !== 'active' ? (grant.endedOn ?? grant.deadline) : grant.deadline}
+                                </div>
+                                <div className="mt-1 flex justify-end">
+                              {(() => {
+                                const left = grant.lifecycle === 'expired' ? daysUntilArchive(grant.endedOn) : null;
+                                return left != null ? (
+                                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded" title={`Calls move to the archive ${ARCHIVE_AFTER_DAYS} days after they end`}>
+                                    {left <= 1 ? 'Archives tomorrow' : `Archives in ${left} days`}
+                                  </span>
+                                ) : null;
+                              })()}
                                 </div>
                               </div>
                               <button 
@@ -2328,7 +2534,7 @@ export default function App() {
                               >
                                 Explore
                               </button>
-                              {isSuperAdmin && grant.lifecycle !== 'active' && (
+                              {isSuperAdmin && grant.lifecycle !== 'active' && !grant.archivedByAge && (
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -2445,7 +2651,7 @@ export default function App() {
                               }`}>
                                 {selectedExplorerMatchScore}%
                               </span>
-                              {isSuperAdmin && selectedExplorerGrant.lifecycle !== 'active' && (
+                              {isSuperAdmin && selectedExplorerGrant.lifecycle !== 'active' && !selectedExplorerGrant.archivedByAge && (
                                 <button
                                   onClick={() => handleArchiveGrant(selectedExplorerGrant, selectedExplorerGrant.lifecycle === 'archived')}
                                   disabled={archivingGrantId === selectedExplorerGrant.id}
@@ -2593,6 +2799,8 @@ export default function App() {
                                 <p className="text-gray-700 bg-gray-50/50 p-3.5 rounded-xl border border-gray-100 text-xs whitespace-pre-line leading-relaxed">{selectedExplorerGrant.scope}</p>
                               </div>
                             )}
+
+                            <CallHistory grantId={selectedExplorerGrant.id} onOpenGrant={openGrantById} compact />
 
                             {/* Keywords */}
                             {selectedExplorerGrant.extractedKeywords && selectedExplorerGrant.extractedKeywords.length > 0 && (
@@ -4987,6 +5195,9 @@ The bootcamp expects to reach 100+ educators, who will introduce computational t
                   {selectedGrant.description}
                 </p>
               </div>
+
+              {/* Historical trail of this call across editions */}
+              <CallHistory grantId={selectedGrant.id} onOpenGrant={openGrantById} />
 
               {/* Scope & Objectives */}
               {selectedGrant.objectives && (

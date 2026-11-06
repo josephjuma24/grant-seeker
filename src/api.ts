@@ -18,6 +18,7 @@ import type {
   AuditEntry,
   Budget,
   Consortium,
+  CallHistory,
   DashboardStats,
   Funder,
   Grant,
@@ -227,6 +228,10 @@ export function normalizeGrant(g: Raw): Grant {
     status: g.status,
     lifecycle: g.lifecycle ?? (g.status === 'closed' ? 'expired' : 'active'),
     archivedAt: g.archivedAt ?? null,
+    endedOn: g.endedOn ?? null,
+    archivedByAge: g.archivedByAge ?? false,
+    editionCount: g.editionCount ?? 1,
+    newerEditionId: g.newerEditionId ?? null,
     funderId: g.funderId ?? '',
     funderName: g.funderName ?? 'Unknown funder',
     extractedKeywords: g.extractedKeywords ?? [],
@@ -429,6 +434,9 @@ export const api = {
   },
   async stats(): Promise<DashboardStats> {
     return get<DashboardStats>('/api/grants/stats');
+  },
+  async grantHistory(id: string): Promise<CallHistory> {
+    return get<CallHistory>(`/api/grants/${id}/history`);
   },
   /* archive (super admin) */
   async archiveGrant(id: string): Promise<Grant> {

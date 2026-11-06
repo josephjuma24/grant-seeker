@@ -9,6 +9,7 @@ import { z } from 'zod';
 
 import { env, isProduction, projectRoot } from './config/env.ts';
 import { closeDb, pingDb } from './db/index.ts';
+import { startLiveUpdates, stopLiveUpdates } from './lib/liveUpdates.ts';
 import { HttpError } from './lib/httpError.ts';
 import { auditMutations, requestContext } from './middleware/auditLogger.ts';
 import { CSRF_HEADER } from './middleware/auth.ts';
@@ -196,9 +197,12 @@ async function start() {
   const server = app.listen(env.PORT, '0.0.0.0', () => {
     console.log(`GrantSeeker API listening on http://0.0.0.0:${env.PORT} (${env.NODE_ENV})`);
   });
+  // Push dashboard updates when the harvester or admins change catalogue data.
+  void startLiveUpdates();
 
   const shutdown = (signal: string) => {
     console.log(`${signal} received, draining connections`);
+    void stopLiveUpdates();
     server.close(async () => {
       await closeDb();
       process.exit(0);

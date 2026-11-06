@@ -5,6 +5,8 @@ import type pg from 'pg';
 import * as schema from '../db/schema.ts';
 import type { StructuredProfile } from '../../shared/profile.ts';
 import { applicantProfiles, auditLog, funders, grants, notifications, scraperRuns, users } from '../db/schema.ts';
+import { ARCHIVE_AFTER_DAYS } from '../../shared/grantLifecycle.ts';
+import { isPastArchiveAge } from '../lib/grantQueries.ts';
 import { scoreUserMatches } from '../lib/matchService.ts';
 import {
   funderSource,
@@ -242,11 +244,10 @@ async function harvest(deps: PipelineDeps, req: RunRequest): Promise<RunResult> 
       }
     }
 
-    // Calls whose deadline has passed stop showing as open right away.
-    await db
-      .update(grants)
-      .set({ status: 'closed' })
-      .where(and(eq(grants.status, 'active'), sql`${grants.deadline} < current_date`));
+    // Calls whose deadline has passed stop showing as open right away, and
+    // calls (new from the source or not) that ended over 30 days ago are archived.
+    const lifecycle = await closeAndArchive(db);
+    if (lifecycle.archived) log(`lifecycle: ${lifecycle.closed} closed, ${lifecycle.archived} archived (ended >${ARCHIVE_AFTER_DAYS}d ago)`);
 
     /* 06. Embeddings ------------------------------------------------- */
     let embeddingErrors = 0;
@@ -369,14 +370,24 @@ async function harvestSource(
       contentHash: sha256(listing.fingerprint),
       scrapedAt: new Date(),
     };
+    // Same page, new content: keep what it said before (often last cycle's call).
+    if (hashByUrl.has(listing.url)) await snapshotGrant(db, listing.url);
+    const open = values.status === 'active';
     const [row] = await db
       .insert(grants)
-      .values({ url: listing.url, ...values })
+      .values({ url: listing.url, ...values, closedAt: open ? null : new Date() })
       // Changed text: drop the old embedding so step 06 recomputes it.
-      // A reopened or extended call comes back out of the archive.
+      // A reopened or extended call comes back out of the archive; a closed
+      // one keeps the day it was first seen closed.
       .onConflictDoUpdate({
         target: grants.url,
-        set: { ...values, embedding: null, ...(values.status === 'active' ? { archivedAt: null, archivedBy: null } : {}) },
+        set: {
+          ...values,
+          embedding: null,
+          ...(open
+            ? { closedAt: null, archivedAt: null, archivedBy: null }
+            : { closedAt: sql`coalesce(${grants.closedAt}, now())` }),
+        },
       })
       .returning({ id: grants.id, inserted: sql<boolean>`(xmax = 0)` });
     if (!row) return;
@@ -385,6 +396,19 @@ async function harvestSource(
     else counts.updated++;
   });
   return counts;
+}
+
+/** Saves the stored version of a call before the harvester overwrites it. */
+async function snapshotGrant(db: PipelineDeps['db'], url: string) {
+  await db.execute(sql`
+    insert into grant_revisions (grant_id, snapshot)
+    select id, jsonb_build_object(
+      'title', title, 'description', description, 'objectives', objectives,
+      'requiredOutcomes', required_outcomes, 'scope', scope, 'category', category,
+      'amount', amount, 'currency', currency, 'deadline', deadline,
+      'eligibleRegions', to_jsonb(eligible_regions), 'eligibleOrgTypes', to_jsonb(eligible_org_types),
+      'keywords', to_jsonb(keywords), 'status', status, 'scrapedAt', scraped_at)
+    from grants where url = ${url}`);
 }
 
 function dedupeByUrl(listings: Listing[]): Listing[] {
@@ -504,41 +528,38 @@ async function matchUsers(deps: PipelineDeps, changedGrantIds: string[], rematch
 /* Housekeeping (daily)                                                */
 /* ------------------------------------------------------------------ */
 
-export async function housekeeping(
-  deps: Pick<PipelineDeps, 'db' | 'log'>,
-  // Auto-archive calls this many days past their deadline; 0 turns it off.
-  opts: { archiveAfterDays?: number } = {},
-) {
-  const closed = await deps.db
+/**
+ * Applies the call lifecycle: closes calls whose deadline has passed, and
+ * stamps archived_at on calls that ended more than ARCHIVE_AFTER_DAYS days
+ * ago (shared/grantLifecycle.ts). The API already classifies those as
+ * archived from their dates alone; the stamp records when it happened.
+ */
+export async function closeAndArchive(db: PipelineDeps['db']) {
+  const closed = await db
     .update(grants)
-    .set({ status: 'closed' })
+    .set({ status: 'closed', closedAt: sql`coalesce(${grants.closedAt}, now())` })
     .where(and(eq(grants.status, 'active'), sql`${grants.deadline} < current_date`))
     .returning({ id: grants.id });
-  const archiveAfterDays = opts.archiveAfterDays ?? 0;
-  const archived =
-    archiveAfterDays > 0
-      ? await deps.db
-          .update(grants)
-          .set({ archivedAt: sql`now()` })
-          .where(
-            and(
-              isNull(grants.archivedAt),
-              eq(grants.status, 'closed'),
-              sql`${grants.deadline} < current_date - ${archiveAfterDays}::int`,
-            ),
-          )
-          .returning({ id: grants.id })
-      : [];
+  const archived = await db
+    .update(grants)
+    .set({ archivedAt: sql`now()` })
+    .where(and(isNull(grants.archivedAt), isPastArchiveAge))
+    .returning({ id: grants.id });
+  return { closed: closed.length, archived: archived.length };
+}
+
+export async function housekeeping(deps: Pick<PipelineDeps, 'db' | 'log'>) {
+  const { closed, archived } = await closeAndArchive(deps.db);
   const { rows } = await deps.db.execute<{ n: number }>(sql`select app.purge_expired_refresh_tokens() as n`);
   const purged = rows[0]?.n ?? 0;
   await deps.db.insert(auditLog).values({
     action: 'system.housekeeping',
     entity: 'system',
-    diff: { grantsClosed: closed.length, grantsArchived: archived.length, archiveAfterDays, refreshTokensPurged: purged },
+    diff: { grantsClosed: closed, grantsArchived: archived, archiveAfterDays: ARCHIVE_AFTER_DAYS, refreshTokensPurged: purged },
   });
   deps.log(
-    `housekeeping: ${closed.length} grants closed, ${archived.length} archived (>${archiveAfterDays}d expired), ${purged} expired refresh tokens purged`,
+    `housekeeping: ${closed} grants closed, ${archived} archived (ended >${ARCHIVE_AFTER_DAYS}d ago), ${purged} expired refresh tokens purged`,
   );
-  return { grantsClosed: closed.length, grantsArchived: archived.length, refreshTokensPurged: purged };
+  return { grantsClosed: closed, grantsArchived: archived, refreshTokensPurged: purged };
 }
 

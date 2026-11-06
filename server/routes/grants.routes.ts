@@ -4,11 +4,16 @@ import { z } from 'zod';
 
 import { withUserTx, type Tx } from '../db/index.ts';
 import { bookmarks, funders, grantMatches, grants } from '../db/schema.ts';
+import { ARCHIVE_AFTER_DAYS, CRITICAL_DEADLINE_DAYS, DUE_THIS_WEEK_DAYS } from '../../shared/grantLifecycle.ts';
+import { loadCallHistory } from '../lib/callHistory.ts';
+import { harvestStatus } from '../lib/harvestStatus.ts';
+import { liveStream } from '../lib/liveUpdates.ts';
 import { FIT_VERSION } from '../lib/fitScoring.ts';
 import { embedText } from '../lib/gemini.ts';
 import {
   GRANT_LIFECYCLES,
   grantRowColumns,
+  endedOn,
   isArchived,
   isExpired,
   isLive,
@@ -155,6 +160,10 @@ grantsRouter.get(
   }),
 );
 
+// Server-Sent Events: "change" whenever catalogue data changes, so open
+// dashboards refresh at once. Carries no data; clients re-fetch.
+grantsRouter.get('/live', liveStream);
+
 grantsRouter.get(
   '/funders',
   handle({}, async (_req, res) => {
@@ -172,8 +181,8 @@ grantsRouter.get(
 /* Dashboard statistics (the prototype's /api/analytics/dashboard)     */
 /* ------------------------------------------------------------------ */
 
-const UPCOMING_DAYS = 45;
-const RECENT_EXPIRY_DAYS = 30;
+// Critical deadlines: open calls closing within CRITICAL_DEADLINE_DAYS.
+const ARCHIVING_SOON_DAYS = 7;
 const STRONG_MATCH = 70;
 
 grantsRouter.get(
@@ -181,15 +190,26 @@ grantsRouter.get(
   optionalAuth,
   handle({}, async (req, res) => {
     const userId = req.user?.id;
+    // Scan status comes from admin-only tables; read as aggregates on its own.
+    const harvest = await harvestStatus().catch(() => null);
     const stats = await withUserTx(identity(req), async (tx) => {
       // Past-deadline calls drop out at once, not only after housekeeping.
       const active = isLive;
+      // Only open calls count: an expired or archived call leaves the pool,
+      // the average and the deadline counts the moment it ends. Calls that
+      // state no amount are left out of the average rather than counted as 0.
+      const funded = sql`${grants.amount} > 0`;
       const [totals] = await tx
         .select({
           count: sql<number>`count(*)`.mapWith(Number),
-          funding: sql<number>`coalesce(sum(${grants.amount}), 0)`.mapWith(Number),
-          average: sql<number>`coalesce(avg(${grants.amount}), 0)`.mapWith(Number),
-          upcoming: sql<number>`count(*) filter (where ${grants.deadline} between current_date and current_date + ${UPCOMING_DAYS}::int)`.mapWith(Number),
+          funded: sql<number>`count(*) filter (where ${funded})`.mapWith(Number),
+          funding: sql<number>`coalesce(sum(${grants.amount}) filter (where ${funded}), 0)`.mapWith(Number),
+          average: sql<number>`coalesce(avg(${grants.amount}) filter (where ${funded}), 0)`.mapWith(Number),
+          upcoming: sql<number>`count(*) filter (where ${grants.deadline} between current_date and current_date + ${CRITICAL_DEADLINE_DAYS}::int)`.mapWith(Number),
+          upcomingFunding: sql<number>`coalesce(sum(${grants.amount}) filter (where ${funded} and ${grants.deadline} between current_date and current_date + ${CRITICAL_DEADLINE_DAYS}::int), 0)`.mapWith(Number),
+          dueThisWeek: sql<number>`count(*) filter (where ${grants.deadline} between current_date and current_date + ${DUE_THIS_WEEK_DAYS}::int)`.mapWith(Number),
+          funders: sql<number>`count(distinct coalesce(${grants.funderId}::text, ${grants.source}))`.mapWith(Number),
+          newThisWeek: sql<number>`count(*) filter (where ${grants.createdAt} > now() - interval '7 days')`.mapWith(Number),
         })
         .from(grants)
         .where(active);
@@ -199,7 +219,8 @@ grantsRouter.get(
         .select({
           expired: sql<number>`count(*) filter (where ${isExpired})`.mapWith(Number),
           expiredFunding: sql<number>`coalesce(sum(${grants.amount}) filter (where ${isExpired}), 0)`.mapWith(Number),
-          expiredRecent: sql<number>`count(*) filter (where ${isExpired} and ${grants.deadline} >= current_date - ${RECENT_EXPIRY_DAYS}::int)`.mapWith(Number),
+          // Expired calls that cross the 30-day line within the next week.
+          archivingSoon: sql<number>`count(*) filter (where ${isExpired} and ${endedOn} < current_date - ${ARCHIVE_AFTER_DAYS - ARCHIVING_SOON_DAYS}::int)`.mapWith(Number),
           archived: sql<number>`count(*) filter (where ${isArchived})`.mapWith(Number),
         })
         .from(grants);
@@ -255,9 +276,18 @@ grantsRouter.get(
         totalFundingAvailable: totals?.funding ?? 0,
         averageGrantAmount: totals?.average ?? 0,
         upcomingDeadlinesCount: totals?.upcoming ?? 0,
+        upcomingDeadlinesFunding: totals?.upcomingFunding ?? 0,
+        dueThisWeekCount: totals?.dueThisWeek ?? 0,
+        criticalDeadlineDays: CRITICAL_DEADLINE_DAYS,
+        fundedGrantsCount: totals?.funded ?? 0,
+        activeFundersCount: totals?.funders ?? 0,
+        newThisWeekCount: totals?.newThisWeek ?? 0,
+        harvest,
+        generatedAt: new Date().toISOString(),
         expiredGrantsCount: lapsed?.expired ?? 0,
         expiredFunding: lapsed?.expiredFunding ?? 0,
-        expiredRecentCount: lapsed?.expiredRecent ?? 0,
+        archivingSoonCount: lapsed?.archivingSoon ?? 0,
+        archiveAfterDays: ARCHIVE_AFTER_DAYS,
         archivedGrantsCount: lapsed?.archived ?? 0,
         matchedGrantsCount,
         successRate,
@@ -288,7 +318,7 @@ grantsRouter.post(
       const archived = await withUserTx(identity(req), async (tx) => {
         const rows = await tx
           .update(grants)
-          .set({ archivedAt: sql`now()`, archivedBy: meId(req), status: 'closed' })
+          .set({ archivedAt: sql`now()`, archivedBy: meId(req), status: 'closed', closedAt: sql`coalesce(${grants.closedAt}, now())` })
           .where(
             and(
               isExpired,
@@ -323,7 +353,7 @@ grantsRouter.post(
       if (current.lifecycle === 'expired') {
         await tx
           .update(grants)
-          .set({ archivedAt: sql`now()`, archivedBy: meId(req), status: 'closed' })
+          .set({ archivedAt: sql`now()`, archivedBy: meId(req), status: 'closed', closedAt: sql`coalesce(${grants.closedAt}, now())` })
           .where(eq(grants.id, params.id));
         await recordAudit(tx, req, { action: 'grant.archive', entity: 'grant', entityId: params.id });
       }
@@ -339,7 +369,13 @@ grantsRouter.post(
   requireRole('super_admin'),
   handle({ params: GrantParams }, async (req, res, { params }) => {
     const grant = await withUserTx(identity(req), async (tx) => {
-      await loadGrant(tx, params.id);
+      const current = await loadGrant(tx, params.id);
+      if (current.archivedByAge) {
+        throw conflict(
+          'archived_by_age',
+          `This call ended more than ${ARCHIVE_AFTER_DAYS} days ago, so it stays in the archive`,
+        );
+      }
       // Back to the expired list; it stays closed.
       await tx.update(grants).set({ archivedAt: null, archivedBy: null }).where(eq(grants.id, params.id));
       await recordAudit(tx, req, { action: 'grant.restore', entity: 'grant', entityId: params.id });
@@ -505,6 +541,17 @@ grantsRouter.get(
   handle({ params: GrantParams }, async (req, res, { params }) => {
     const grant = await withUserTx(identity(req), (tx) => loadGrant(tx, params.id));
     res.json({ grant: toGrantDto(grant) });
+  }),
+);
+
+// Every edition of this call and what changed between them.
+grantsRouter.get(
+  '/:id/history',
+  optionalAuth,
+  handle({ params: GrantParams }, async (req, res, { params }) => {
+    const history = await withUserTx(identity(req), (tx) => loadCallHistory(tx, params.id));
+    if (!history) throw notFound('Grant not found');
+    res.json(history);
   }),
 );
 

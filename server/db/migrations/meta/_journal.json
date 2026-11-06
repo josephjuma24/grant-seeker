@@ -57,6 +57,20 @@
       "when": 1793965142149,
       "tag": "0007_grant_archive",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793965864861,
+      "tag": "0008_grant_history",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793968100232,
+      "tag": "0009_grant_closed_at",
+      "breakpoints": true
     }
   ]
 }
