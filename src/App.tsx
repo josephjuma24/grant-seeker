@@ -279,7 +279,24 @@ export default function App() {
   const [selectedRegion, setSelectedRegion] = useState('all');
   const [selectedOrgType, setSelectedOrgType] = useState('all');
   const [matchFilterMode, setMatchFilterMode] = useState<'all' | 'high'>('all');
-  const [grantViewMode, setGrantViewMode] = useState<'list' | 'tiles' | 'details'>('tiles');
+  // List by default; the viewer's last choice is remembered on this device.
+  const [grantViewMode, setGrantViewModeState] = useState<'list' | 'tiles' | 'details'>(() => {
+    try {
+      const saved = localStorage.getItem('gs.explorerView');
+      if (saved === 'list' || saved === 'tiles' || saved === 'details') return saved;
+    } catch {
+      /* storage blocked */
+    }
+    return 'list';
+  });
+  const setGrantViewMode = (mode: 'list' | 'tiles' | 'details') => {
+    setGrantViewModeState(mode);
+    try {
+      localStorage.setItem('gs.explorerView', mode);
+    } catch {
+      /* storage blocked */
+    }
+  };
   // Active calls by default; expired and archived calls are kept apart.
   const [grantLifecycleView, setGrantLifecycleView] = useState<GrantLifecycle>('active');
   const [archivingGrantId, setArchivingGrantId] = useState<string | null>(null);
@@ -751,6 +768,20 @@ export default function App() {
     }
     document.getElementById('assistant-workspace')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+
+  // Profile completeness, shown next to the match count on the dashboard.
+  const [profileStrength, setProfileStrength] = useState<number | null>(null);
+  useEffect(() => {
+    if (!authed || activeTab !== 'dashboard') return;
+    let cancelled = false;
+    api.profile
+      .get()
+      .then(p => !cancelled && setProfileStrength(p.completeness.percent))
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [authed, activeTab, analytics?.matchedGrantsCount]);
 
   // --- Live dashboard ---
   // The API pushes a "change" event whenever the harvester, housekeeping or
@@ -1441,8 +1472,30 @@ export default function App() {
                   <h1 className="text-2xl font-black text-gray-900 tracking-tight">Intelligence Dashboard</h1>
                   <p className="text-gray-500 text-sm mt-1">
                     AI agents are tracking <span className="font-semibold text-gray-900">{analytics?.totalActiveGrants ?? lifecycleCounts.active} open calls</span> from <span className="font-semibold text-gray-900">{analytics?.activeFundersCount ?? 0} funders</span>
-                    {analytics?.newThisWeekCount ? <> &middot; <span className="font-semibold text-emerald-700">{analytics.newThisWeekCount} new this week</span></> : null}
-                    . Matched against your research in <span className="text-blue-600 font-semibold">{user.researchInterests.slice(0, 2).join(', ')}</span>.
+                    {analytics?.newThisWeekCount ? <> &middot; <span className="font-semibold text-emerald-700">{analytics.newThisWeekCount} new this week</span></> : null}.
+                  </p>
+                  {/* Matching is scored against the user's whole profile (qualifications,
+                      track record, documents, eligibility), so say how strong that is. */}
+                  <p id="dashboard-profile-match" className="text-gray-500 text-xs mt-1">
+                    Scored against your full profile
+                    {profileStrength != null && (
+                      <>
+                        {' '}(<span className={`font-semibold ${profileStrength >= 80 ? 'text-emerald-700' : profileStrength >= 50 ? 'text-amber-700' : 'text-rose-700'}`}>{profileStrength}% complete</span>)
+                      </>
+                    )}
+                    {' '}&middot; <span className="font-semibold text-gray-900">{analytics?.matchedGrantsCount ?? 0} strong matches</span>
+                    {profileStrength != null && profileStrength < 80 && (
+                      <>
+                        {' '}&middot;{' '}
+                        <button
+                          type="button"
+                          onClick={() => setActiveTab('smart')}
+                          className="font-semibold text-blue-600 hover:underline cursor-pointer"
+                        >
+                          Strengthen your profile for better matches
+                        </button>
+                      </>
+                    )}
                   </p>
                 </div>
                 <div className="flex gap-4">
