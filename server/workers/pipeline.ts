@@ -373,7 +373,11 @@ async function harvestSource(
       .insert(grants)
       .values({ url: listing.url, ...values })
       // Changed text: drop the old embedding so step 06 recomputes it.
-      .onConflictDoUpdate({ target: grants.url, set: { ...values, embedding: null } })
+      // A reopened or extended call comes back out of the archive.
+      .onConflictDoUpdate({
+        target: grants.url,
+        set: { ...values, embedding: null, ...(values.status === 'active' ? { archivedAt: null, archivedBy: null } : {}) },
+      })
       .returning({ id: grants.id, inserted: sql<boolean>`(xmax = 0)` });
     if (!row) return;
     changed.add(row.id);
@@ -500,20 +504,41 @@ async function matchUsers(deps: PipelineDeps, changedGrantIds: string[], rematch
 /* Housekeeping (daily)                                                */
 /* ------------------------------------------------------------------ */
 
-export async function housekeeping(deps: Pick<PipelineDeps, 'db' | 'log'>) {
+export async function housekeeping(
+  deps: Pick<PipelineDeps, 'db' | 'log'>,
+  // Auto-archive calls this many days past their deadline; 0 turns it off.
+  opts: { archiveAfterDays?: number } = {},
+) {
   const closed = await deps.db
     .update(grants)
     .set({ status: 'closed' })
     .where(and(eq(grants.status, 'active'), sql`${grants.deadline} < current_date`))
     .returning({ id: grants.id });
+  const archiveAfterDays = opts.archiveAfterDays ?? 0;
+  const archived =
+    archiveAfterDays > 0
+      ? await deps.db
+          .update(grants)
+          .set({ archivedAt: sql`now()` })
+          .where(
+            and(
+              isNull(grants.archivedAt),
+              eq(grants.status, 'closed'),
+              sql`${grants.deadline} < current_date - ${archiveAfterDays}::int`,
+            ),
+          )
+          .returning({ id: grants.id })
+      : [];
   const { rows } = await deps.db.execute<{ n: number }>(sql`select app.purge_expired_refresh_tokens() as n`);
   const purged = rows[0]?.n ?? 0;
   await deps.db.insert(auditLog).values({
     action: 'system.housekeeping',
     entity: 'system',
-    diff: { grantsClosed: closed.length, refreshTokensPurged: purged },
+    diff: { grantsClosed: closed.length, grantsArchived: archived.length, archiveAfterDays, refreshTokensPurged: purged },
   });
-  deps.log(`housekeeping: ${closed.length} grants closed, ${purged} expired refresh tokens purged`);
-  return { grantsClosed: closed.length, refreshTokensPurged: purged };
+  deps.log(
+    `housekeeping: ${closed.length} grants closed, ${archived.length} archived (>${archiveAfterDays}d expired), ${purged} expired refresh tokens purged`,
+  );
+  return { grantsClosed: closed.length, grantsArchived: archived.length, refreshTokensPurged: purged };
 }
 

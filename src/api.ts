@@ -225,6 +225,8 @@ export function normalizeGrant(g: Raw): Grant {
     category: g.category ?? 'Other',
     url: g.url,
     status: g.status,
+    lifecycle: g.lifecycle ?? (g.status === 'closed' ? 'expired' : 'active'),
+    archivedAt: g.archivedAt ?? null,
     funderId: g.funderId ?? '',
     funderName: g.funderName ?? 'Unknown funder',
     extractedKeywords: g.extractedKeywords ?? [],
@@ -427,6 +429,16 @@ export const api = {
   },
   async stats(): Promise<DashboardStats> {
     return get<DashboardStats>('/api/grants/stats');
+  },
+  /* archive (super admin) */
+  async archiveGrant(id: string): Promise<Grant> {
+    return normalizeGrant((await post<{ grant: Raw }>(`/api/grants/${id}/archive`)).grant);
+  },
+  async restoreGrant(id: string): Promise<Grant> {
+    return normalizeGrant((await post<{ grant: Raw }>(`/api/grants/${id}/restore`)).grant);
+  },
+  async archiveExpiredGrants(olderThanDays = 0): Promise<number> {
+    return (await post<{ archived: number }>('/api/grants/archive-expired', { olderThanDays })).archived;
   },
 
   /* matching */

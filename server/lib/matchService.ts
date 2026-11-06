@@ -7,6 +7,7 @@ import * as schema from '../db/schema.ts';
 import { applicantProfiles, funders, grantMatches, grants, users } from '../db/schema.ts';
 import { FIT_VERSION, legacyBreakdown, scoreFit } from './fitScoring.ts';
 import { extractProfile, type FormInputs } from './profileExtraction.ts';
+import { isLive } from './grantQueries.ts';
 
 // Scores one user's profile against active grants and stores the result in
 // grant_matches. Shared by the API (on upload, edit, rescore) and the
@@ -101,7 +102,7 @@ export async function scoreUserMatches(
     })
     .from(grants)
     .leftJoin(funders, eq(funders.id, grants.funderId))
-    .where(and(eq(grants.status, 'active'), opts.grantIds ? inArray(grants.id, opts.grantIds) : undefined))
+    .where(and(isLive, opts.grantIds ? inArray(grants.id, opts.grantIds) : undefined))
     .orderBy(sql`${similarity} desc nulls last`, sql`${grants.deadline} asc nulls last`)
     .limit(MAX_SCORED_GRANTS);
   if (candidates.length === 0) return [];
@@ -164,7 +165,7 @@ export async function rankedMatches(
     .select({ id: grants.id })
     .from(grants)
     .leftJoin(grantMatches, and(eq(grantMatches.grantId, grants.id), eq(grantMatches.userId, userId)))
-    .where(and(eq(grants.status, 'active'), or(isNull(grantMatches.grantId), isNull(grantMatches.model), ne(grantMatches.model, FIT_VERSION))))
+    .where(and(isLive, or(isNull(grantMatches.grantId), isNull(grantMatches.model), ne(grantMatches.model, FIT_VERSION))))
     .limit(MAX_SCORED_GRANTS);
   if (stale.length) await scoreUserMatches(db, userId, { grantIds: stale.map((s) => s.id) });
 
@@ -175,7 +176,7 @@ export async function rankedMatches(
     .where(
       and(
         eq(grantMatches.userId, userId),
-        eq(grants.status, 'active'),
+        isLive,
         gte(grantMatches.score, opts.minScore ?? 0),
         opts.includeIneligible ? undefined : ne(grantMatches.eligibility, 'ineligible' satisfies Eligibility),
       ),

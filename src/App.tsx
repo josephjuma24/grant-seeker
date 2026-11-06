@@ -55,7 +55,10 @@ import {
   Lock,
   Unlock,
   Send,
-  UserPlus
+  UserPlus,
+  Archive,
+  ArchiveRestore,
+  CalendarX
 } from 'lucide-react';
 
 import { 
@@ -63,6 +66,7 @@ import {
   UserProfile, 
   Funder, 
   Grant, 
+  GrantLifecycle,
   GrantMatch, 
   Notification, 
   ApplicationTracker, 
@@ -239,6 +243,10 @@ export default function App() {
   const [selectedOrgType, setSelectedOrgType] = useState('all');
   const [matchFilterMode, setMatchFilterMode] = useState<'all' | 'high'>('all');
   const [grantViewMode, setGrantViewMode] = useState<'list' | 'tiles' | 'details'>('tiles');
+  // Active calls by default; expired and archived calls are kept apart.
+  const [grantLifecycleView, setGrantLifecycleView] = useState<GrantLifecycle>('active');
+  const [archivingGrantId, setArchivingGrantId] = useState<string | null>(null);
+  const [bulkArchiving, setBulkArchiving] = useState(false);
   const [explorerSelectedGrantId, setExplorerSelectedGrantId] = useState<string | null>(null);
   const [detailsMatch, setDetailsMatch] = useState<GrantMatch | null>(null);
   const [loadingDetailsMatch, setLoadingDetailsMatch] = useState(false);
@@ -896,9 +904,51 @@ export default function App() {
     }
   };
 
+  // --- Archive expired calls (super admin) ---
+  const lifecycleCounts = useMemo(() => {
+    const counts: Record<GrantLifecycle, number> = { active: 0, expired: 0, archived: 0 };
+    for (const g of grants) counts[g.lifecycle]++;
+    return counts;
+  }, [grants]);
+
+  const handleArchiveGrant = async (grant: Grant, restore = false) => {
+    setArchivingGrantId(grant.id);
+    try {
+      const updated = restore ? await api.restoreGrant(grant.id) : await api.archiveGrant(grant.id);
+      setGrants(prev => prev.map(g => (g.id === updated.id ? updated : g)));
+      triggerToast(restore ? `Restored "${grant.title}" to expired calls` : `Archived "${grant.title}"`);
+      api.stats().then(setAnalytics).catch(() => {});
+    } catch (err) {
+      triggerToast(errorMessage(err, restore ? 'Could not restore the call' : 'Could not archive the call'), 'error');
+    } finally {
+      setArchivingGrantId(null);
+    }
+  };
+
+  const handleArchiveAllExpired = async () => {
+    const n = lifecycleCounts.expired;
+    if (n === 0) return;
+    if (!window.confirm(`Archive all ${n} expired calls? They leave the expired list but can be restored from Archived.`)) return;
+    setBulkArchiving(true);
+    try {
+      const archived = await api.archiveExpiredGrants();
+      triggerToast(`Archived ${archived} expired call${archived === 1 ? '' : 's'}`);
+      const [fresh, stats] = await Promise.all([api.allGrants(), api.stats()]);
+      setGrants(fresh);
+      setAnalytics(stats);
+    } catch (err) {
+      triggerToast(errorMessage(err, 'Could not archive expired calls'), 'error');
+    } finally {
+      setBulkArchiving(false);
+    }
+  };
+
   // --- Computed Filters for Grant Explorer ---
   const filteredGrantsBeforeMatchFilter = useMemo(() => {
     return grants.filter(g => {
+      // Lifecycle: active / expired / archived
+      if (g.lifecycle !== grantLifecycleView) return false;
+
       // Search Box
       const matchesSearch = searchQuery === '' || 
         g.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -925,7 +975,7 @@ export default function App() {
 
       return matchesSearch && matchesCategory && matchesFunder && matchesRegion && matchesOrg;
     });
-  }, [grants, searchQuery, selectedCategory, selectedFunder, selectedRegion, selectedOrgType]);
+  }, [grants, grantLifecycleView, searchQuery, selectedCategory, selectedFunder, selectedRegion, selectedOrgType]);
 
   const filteredGrants = useMemo(() => {
     return filteredGrantsBeforeMatchFilter.filter(g => {
@@ -955,7 +1005,7 @@ export default function App() {
   const sortedUpcomingDeadlines = useMemo(() => {
     const today = new Date();
     return grants
-      .filter(g => new Date(g.deadline).getTime() >= today.getTime() && g.status === 'active')
+      .filter(g => new Date(g.deadline).getTime() >= today.getTime() && g.lifecycle === 'active')
       .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
       .slice(0, 4);
   }, [grants]);
@@ -1325,7 +1375,7 @@ export default function App() {
               </div>
 
               {/* Stat Bento Row */}
-              <div className="grid grid-cols-4 gap-6">
+              <div className="grid grid-cols-5 gap-4">
                 <div className="bg-white p-5 rounded-xl border border-gray-200 flex items-start gap-4 shadow-sm hover:border-gray-300 transition-colors">
                   <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
                     <DollarSign className="w-5 h-5" />
@@ -1377,6 +1427,30 @@ export default function App() {
                     <p className="text-xs text-gray-400 mt-1">From tracked logs</p>
                   </div>
                 </div>
+
+                <button
+                  id="stat-expired-calls"
+                  type="button"
+                  onClick={() => {
+                    setGrantLifecycleView('expired');
+                    setActiveTab('explorer');
+                  }}
+                  title="Review expired calls in the Grant Explorer"
+                  className="text-left bg-white p-5 rounded-xl border border-gray-200 flex items-start gap-4 shadow-sm hover:border-rose-300 transition-colors cursor-pointer"
+                >
+                  <div className="p-3 bg-rose-50 text-rose-600 rounded-lg">
+                    <CalendarX className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Expired Calls</span>
+                    <h3 className="text-xl font-extrabold text-gray-900 mt-0.5">
+                      {analytics?.expiredGrantsCount ?? 0} Grants
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {analytics?.expiredRecentCount ?? 0} in last 30 days · {analytics?.archivedGrantsCount ?? 0} archived
+                    </p>
+                  </div>
+                </button>
               </div>
 
               {/* Main Grid: Left Matches, Right Deadlines */}
@@ -1892,9 +1966,59 @@ export default function App() {
                     </button>
                   </div>
                   <div className="text-xs text-gray-400 font-semibold">
-                    Showing <span className="text-gray-900 font-bold">{filteredGrants.length}</span> of <span className="text-gray-900 font-bold">{grants.length}</span> records
+                    Showing <span className="text-gray-900 font-bold">{filteredGrants.length}</span> of <span className="text-gray-900 font-bold">{lifecycleCounts[grantLifecycleView]}</span> {grantLifecycleView} calls
                   </div>
                 </div>
+              </div>
+
+              {/* Call lifecycle: active / expired / archived */}
+              <div id="lifecycle-filters" className="bg-white px-5 py-3 rounded-xl border border-gray-200 shadow-sm space-y-2">
+                <div className="flex justify-between items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">Call Status:</span>
+                    <div className="flex bg-gray-100 p-1 rounded-lg border border-gray-200" role="tablist" aria-label="Call status">
+                      {([
+                        { id: 'active', label: 'Active', on: 'text-blue-700' },
+                        { id: 'expired', label: 'Expired', on: 'text-rose-700' },
+                        { id: 'archived', label: 'Archived', on: 'text-gray-800' },
+                      ] as const).map(tab => (
+                        <button
+                          key={tab.id}
+                          id={`lifecycle-${tab.id}`}
+                          role="tab"
+                          aria-selected={grantLifecycleView === tab.id}
+                          onClick={() => setGrantLifecycleView(tab.id)}
+                          className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-1.5 cursor-pointer ${
+                            grantLifecycleView === tab.id ? `bg-white shadow-sm ${tab.on}` : 'text-gray-600 hover:text-gray-950'
+                          }`}
+                        >
+                          {tab.id === 'archived' && <Archive className="w-3.5 h-3.5" />}
+                          {tab.id === 'expired' && <CalendarX className="w-3.5 h-3.5" />}
+                          {tab.label} ({lifecycleCounts[tab.id]})
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {isSuperAdmin && grantLifecycleView === 'expired' && lifecycleCounts.expired > 0 && (
+                    <button
+                      id="archive-all-expired"
+                      onClick={handleArchiveAllExpired}
+                      disabled={bulkArchiving}
+                      className="px-3 py-1.5 bg-gray-900 hover:bg-gray-800 disabled:opacity-60 text-white text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                    >
+                      {bulkArchiving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Archive className="w-3.5 h-3.5" />}
+                      Archive all expired ({lifecycleCounts.expired})
+                    </button>
+                  )}
+                </div>
+                {grantLifecycleView !== 'active' && (
+                  <p className="text-[11px] text-gray-500">
+                    {grantLifecycleView === 'expired'
+                      ? 'Closed or past-deadline calls. They are left out of the dashboard figures and active listings, and are archived automatically 30 days after the deadline.'
+                      : 'Archived calls are kept for reference only. Restoring one returns it to the expired list.'}
+                  </p>
+                )}
               </div>
 
               {/* Filters Panel */}
@@ -2109,11 +2233,24 @@ export default function App() {
                                 <DollarSign className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                                 ${grant.fundingAmount.toLocaleString()}
                               </span>
-                              <span className="flex items-center gap-1">
-                                <Calendar className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                                {grant.deadline}
+                              <span className={`flex items-center gap-1 ${grant.lifecycle !== 'active' ? 'text-rose-500' : ''}`}>
+                                <Calendar className="w-3.5 h-3.5 shrink-0" />
+                                {grant.lifecycle !== 'active' ? `Closed ${grant.deadline}` : grant.deadline}
                               </span>
                             </div>
+                            {isSuperAdmin && grant.lifecycle !== 'active' && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleArchiveGrant(grant, grant.lifecycle === 'archived');
+                                }}
+                                disabled={archivingGrantId === grant.id}
+                                className="mt-3 self-end px-3 py-1.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-60"
+                              >
+                                {grant.lifecycle === 'archived' ? <ArchiveRestore className="w-3.5 h-3.5" /> : <Archive className="w-3.5 h-3.5" />}
+                                {grant.lifecycle === 'archived' ? 'Restore' : 'Archive'}
+                              </button>
+                            )}
                           </div>
                         );
                       })}
@@ -2191,6 +2328,20 @@ export default function App() {
                               >
                                 Explore
                               </button>
+                              {isSuperAdmin && grant.lifecycle !== 'active' && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleArchiveGrant(grant, grant.lifecycle === 'archived');
+                                  }}
+                                  disabled={archivingGrantId === grant.id}
+                                  title={grant.lifecycle === 'archived' ? 'Restore to expired calls' : 'Archive this expired call'}
+                                  className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-60"
+                                >
+                                  {grant.lifecycle === 'archived' ? <ArchiveRestore className="w-3.5 h-3.5" /> : <Archive className="w-3.5 h-3.5" />}
+                                  {grant.lifecycle === 'archived' ? 'Restore' : 'Archive'}
+                                </button>
+                              )}
                             </div>
                           </div>
                         );
@@ -2294,6 +2445,16 @@ export default function App() {
                               }`}>
                                 {selectedExplorerMatchScore}%
                               </span>
+                              {isSuperAdmin && selectedExplorerGrant.lifecycle !== 'active' && (
+                                <button
+                                  onClick={() => handleArchiveGrant(selectedExplorerGrant, selectedExplorerGrant.lifecycle === 'archived')}
+                                  disabled={archivingGrantId === selectedExplorerGrant.id}
+                                  className="ml-1 px-2 py-0.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 text-[10px] font-bold rounded transition-all cursor-pointer flex items-center gap-1 disabled:opacity-60"
+                                >
+                                  {selectedExplorerGrant.lifecycle === 'archived' ? <ArchiveRestore className="w-3 h-3" /> : <Archive className="w-3 h-3" />}
+                                  {selectedExplorerGrant.lifecycle === 'archived' ? 'Restore' : 'Archive'}
+                                </button>
+                              )}
                             </div>
                           </div>
 

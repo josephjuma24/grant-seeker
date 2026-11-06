@@ -6,8 +6,17 @@ import { withUserTx, type Tx } from '../db/index.ts';
 import { bookmarks, funders, grantMatches, grants } from '../db/schema.ts';
 import { FIT_VERSION } from '../lib/fitScoring.ts';
 import { embedText } from '../lib/gemini.ts';
-import { grantRowColumns, vectorLiteral, type GrantRow } from '../lib/grantQueries.ts';
-import { notFound } from '../lib/httpError.ts';
+import {
+  GRANT_LIFECYCLES,
+  grantRowColumns,
+  isArchived,
+  isExpired,
+  isLive,
+  lifecycleFilter,
+  vectorLiteral,
+  type GrantRow,
+} from '../lib/grantQueries.ts';
+import { conflict, notFound } from '../lib/httpError.ts';
 import { rankedMatches, scoreUserMatches } from '../lib/matchService.ts';
 import { toGrantDto, toMatchDto } from '../lib/serializers.ts';
 import { recordAudit } from '../middleware/auditLogger.ts';
@@ -61,6 +70,8 @@ const ListQuery = zPagination.extend({
   region: z.string().trim().max(120).optional(),
   orgType: z.string().trim().max(120).optional(),
   status: z.enum(['active', 'closed']).optional(),
+  // active: open calls; expired: closed or past deadline; archived: filed away.
+  lifecycle: z.enum([...GRANT_LIFECYCLES, 'all']).default('all'),
   deadlineFrom: z.iso.date().optional(),
   deadlineTo: z.iso.date().optional(),
   minAmount: z.coerce.number().nonnegative().optional(),
@@ -92,6 +103,7 @@ grantsRouter.get(
       region ? sql`exists (select 1 from unnest(${grants.eligibleRegions}) r where r ilike ${`%${escapeLike(region)}%`})` : undefined,
       orgType ? sql`exists (select 1 from unnest(${grants.eligibleOrgTypes}) o where o ilike ${`%${escapeLike(orgType)}%`})` : undefined,
       query.status ? eq(grants.status, query.status) : undefined,
+      query.lifecycle !== 'all' ? lifecycleFilter[query.lifecycle] : undefined,
       query.deadlineFrom ? gte(grants.deadline, query.deadlineFrom) : undefined,
       query.deadlineTo ? lte(grants.deadline, query.deadlineTo) : undefined,
       query.minAmount !== undefined ? gte(grants.amount, query.minAmount) : undefined,
@@ -161,6 +173,7 @@ grantsRouter.get(
 /* ------------------------------------------------------------------ */
 
 const UPCOMING_DAYS = 45;
+const RECENT_EXPIRY_DAYS = 30;
 const STRONG_MATCH = 70;
 
 grantsRouter.get(
@@ -169,7 +182,8 @@ grantsRouter.get(
   handle({}, async (req, res) => {
     const userId = req.user?.id;
     const stats = await withUserTx(identity(req), async (tx) => {
-      const active = eq(grants.status, 'active');
+      // Past-deadline calls drop out at once, not only after housekeeping.
+      const active = isLive;
       const [totals] = await tx
         .select({
           count: sql<number>`count(*)`.mapWith(Number),
@@ -181,6 +195,15 @@ grantsRouter.get(
         .where(active);
 
       // "National Science Foundation (NSF)" → "National Science Foundation"
+      const [lapsed] = await tx
+        .select({
+          expired: sql<number>`count(*) filter (where ${isExpired})`.mapWith(Number),
+          expiredFunding: sql<number>`coalesce(sum(${grants.amount}) filter (where ${isExpired}), 0)`.mapWith(Number),
+          expiredRecent: sql<number>`count(*) filter (where ${isExpired} and ${grants.deadline} >= current_date - ${RECENT_EXPIRY_DAYS}::int)`.mapWith(Number),
+          archived: sql<number>`count(*) filter (where ${isArchived})`.mapWith(Number),
+        })
+        .from(grants);
+
       const funderName = sql<string>`coalesce(split_part(${funders.name}, ' (', 1), 'Unknown')`;
       const funderDistribution = await tx
         .select({ name: funderName, value: sql<number>`coalesce(sum(${grants.amount}), 0)`.mapWith(Number) })
@@ -232,6 +255,10 @@ grantsRouter.get(
         totalFundingAvailable: totals?.funding ?? 0,
         averageGrantAmount: totals?.average ?? 0,
         upcomingDeadlinesCount: totals?.upcoming ?? 0,
+        expiredGrantsCount: lapsed?.expired ?? 0,
+        expiredFunding: lapsed?.expiredFunding ?? 0,
+        expiredRecentCount: lapsed?.expiredRecent ?? 0,
+        archivedGrantsCount: lapsed?.archived ?? 0,
         matchedGrantsCount,
         successRate,
         funderDistribution,
@@ -240,6 +267,85 @@ grantsRouter.get(
       };
     });
     res.json(stats);
+  }),
+);
+
+/* ------------------------------------------------------------------ */
+/* Archive: file expired calls away from the expired list              */
+/* ------------------------------------------------------------------ */
+
+// Grant rows are catalogue data: only super admins may write them (RLS
+// grants_write_app enforces the same).
+
+grantsRouter.post(
+  '/archive-expired',
+  requireAuth,
+  requireRole('super_admin'),
+  handle(
+    // olderThanDays: only calls whose deadline passed at least this long ago.
+    { body: z.object({ olderThanDays: z.number().int().min(0).max(3650).default(0) }).default({ olderThanDays: 0 }) },
+    async (req, res, { body }) => {
+      const archived = await withUserTx(identity(req), async (tx) => {
+        const rows = await tx
+          .update(grants)
+          .set({ archivedAt: sql`now()`, archivedBy: meId(req), status: 'closed' })
+          .where(
+            and(
+              isExpired,
+              body.olderThanDays > 0
+                ? sql`coalesce(${grants.deadline}, ${grants.updatedAt}::date) < current_date - ${body.olderThanDays}::int`
+                : undefined,
+            ),
+          )
+          .returning({ id: grants.id });
+        await recordAudit(tx, req, {
+          action: 'grant.archive_expired',
+          entity: 'grant',
+          diff: { archived: rows.length, olderThanDays: body.olderThanDays },
+        });
+        return rows.length;
+      });
+      res.json({ archived });
+    },
+  ),
+);
+
+grantsRouter.post(
+  '/:id/archive',
+  requireAuth,
+  requireRole('super_admin'),
+  handle({ params: GrantParams }, async (req, res, { params }) => {
+    const grant = await withUserTx(identity(req), async (tx) => {
+      const current = await loadGrant(tx, params.id);
+      if (current.lifecycle === 'active') {
+        throw conflict('grant_not_expired', 'Only expired calls can be archived');
+      }
+      if (current.lifecycle === 'expired') {
+        await tx
+          .update(grants)
+          .set({ archivedAt: sql`now()`, archivedBy: meId(req), status: 'closed' })
+          .where(eq(grants.id, params.id));
+        await recordAudit(tx, req, { action: 'grant.archive', entity: 'grant', entityId: params.id });
+      }
+      return loadGrant(tx, params.id);
+    });
+    res.json({ grant: toGrantDto(grant) });
+  }),
+);
+
+grantsRouter.post(
+  '/:id/restore',
+  requireAuth,
+  requireRole('super_admin'),
+  handle({ params: GrantParams }, async (req, res, { params }) => {
+    const grant = await withUserTx(identity(req), async (tx) => {
+      await loadGrant(tx, params.id);
+      // Back to the expired list; it stays closed.
+      await tx.update(grants).set({ archivedAt: null, archivedBy: null }).where(eq(grants.id, params.id));
+      await recordAudit(tx, req, { action: 'grant.restore', entity: 'grant', entityId: params.id });
+      return loadGrant(tx, params.id);
+    });
+    res.json({ grant: toGrantDto(grant) });
   }),
 );
 
@@ -262,7 +368,7 @@ grantsRouter.get(
             .select({ ...grantRowColumns, similarity: sql<number>`1 - (${grants.embedding} <=> ${qv})` })
             .from(grants)
             .leftJoin(funders, eq(funders.id, grants.funderId))
-            .where(and(eq(grants.status, 'active'), isNotNull(grants.embedding)))
+            .where(and(isLive, isNotNull(grants.embedding)))
             .orderBy(sql`${grants.embedding} <=> ${qv}`)
             .limit(query.limit);
           if (rows.length > 0) return { method: 'vector' as const, rows };
@@ -273,7 +379,7 @@ grantsRouter.get(
           .select({ ...grantRowColumns, similarity: sql<number>`ts_rank(${grants.search}, ${ts})` })
           .from(grants)
           .leftJoin(funders, eq(funders.id, grants.funderId))
-          .where(and(eq(grants.status, 'active'), sql`${grants.search} @@ ${ts}`))
+          .where(and(isLive, sql`${grants.search} @@ ${ts}`))
           .orderBy(sql`ts_rank(${grants.search}, ${ts}) desc`)
           .limit(query.limit);
         return { method: 'fulltext' as const, rows };
@@ -415,7 +521,7 @@ grantsRouter.get(
             .select({ ...grantRowColumns, similarity: sql<number>`1 - (${grants.embedding} <=> ${target})` })
             .from(grants)
             .leftJoin(funders, eq(funders.id, grants.funderId))
-            .where(and(eq(grants.status, 'active'), isNotNull(grants.embedding), sql`${grants.id} <> ${params.id}`))
+            .where(and(isLive, isNotNull(grants.embedding), sql`${grants.id} <> ${params.id}`))
             .orderBy(sql`${grants.embedding} <=> ${target}`)
             .limit(query.limit);
           return { method: 'vector' as const, rows };
@@ -428,7 +534,7 @@ grantsRouter.get(
           .leftJoin(funders, eq(funders.id, grants.funderId))
           .where(
             and(
-              eq(grants.status, 'active'),
+              isLive,
               sql`${grants.id} <> ${params.id}`,
               base.category ? eq(grants.category, base.category) : undefined,
             ),

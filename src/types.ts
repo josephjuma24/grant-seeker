@@ -40,6 +40,8 @@ export interface Funder {
   website: string;
 }
 
+export type GrantLifecycle = 'active' | 'expired' | 'archived';
+
 export interface Grant {
   id: string;
   title: string;
@@ -53,6 +55,9 @@ export interface Grant {
   category: string; // e.g., 'Health', 'Tech', 'Energy', 'Education', 'Social Sciences'
   url: string;
   status: 'active' | 'closed';
+  /** active: open; expired: closed or past deadline; archived: filed away */
+  lifecycle: GrantLifecycle;
+  archivedAt?: string | null;
   funderId: string;
   funderName: string;
   extractedKeywords: string[];
@@ -128,6 +133,12 @@ export interface DashboardStats {
   totalFundingAvailable: number;
   averageGrantAmount: number;
   upcomingDeadlinesCount: number;
+  /** Closed or past deadline, not yet archived */
+  expiredGrantsCount: number;
+  expiredFunding: number;
+  /** Expired within the last 30 days */
+  expiredRecentCount: number;
+  archivedGrantsCount: number;
   matchedGrantsCount: number;
   /** null until at least one proposal is awarded or rejected */
   successRate: number | null;

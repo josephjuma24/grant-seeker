@@ -4,7 +4,7 @@
  *   - every SCRAPE_CRON (default daily at 06:00 and 12:00, Africa/Nairobi):
  *     harvest, embed, match, notify;
  *   - every HOUSEKEEPING_CRON (default 02:00): close expired calls, purge
- *     expired refresh tokens;
+ *     expired refresh tokens; archive calls ARCHIVE_AFTER_DAYS past deadline;
  *   - on NOTIFY scraper_run_requested (the admin "run now" button): a run
  *     now, for one source or all.
  *
@@ -39,6 +39,8 @@ const WorkerSchema = SharedSchema.extend({
   DATABASE_SSL: z.enum(['disable', 'require', 'verify-full']).default('disable'),
 
   HOUSEKEEPING_CRON: cronExpr('0 2 * * *'),
+  // Days past deadline before housekeeping archives an expired call; 0 = never.
+  ARCHIVE_AFTER_DAYS: z.coerce.number().int().min(0).max(3650).default(30),
   SCRAPE_ON_START: flag(false),
   HARVEST_DEFAULT_SOURCES: flag(true),
   GRANTS_GOV_API_URL: z.string().url().default('https://api.grants.gov/v1/api'),
@@ -181,7 +183,7 @@ async function main() {
   });
   const housekeepingTask = cron.schedule(
     env.HOUSEKEEPING_CRON,
-    () => housekeeping(deps).then(() => {}).catch((err: unknown) => log(`housekeeping failed: ${errorText(err)}`)),
+    () => housekeeping(deps, { archiveAfterDays: env.ARCHIVE_AFTER_DAYS }).then(() => {}).catch((err: unknown) => log(`housekeeping failed: ${errorText(err)}`)),
     { timezone: env.CRON_TIMEZONE, name: 'housekeeping', noOverlap: true },
   );
 

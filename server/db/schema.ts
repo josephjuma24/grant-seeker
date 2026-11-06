@@ -397,6 +397,10 @@ export const grants = pgTable(
     eligibleRegions: text('eligible_regions').array().notNull().default(sql`'{}'::text[]`),
     eligibleOrgTypes: text('eligible_org_types').array().notNull().default(sql`'{}'::text[]`),
     status: grantStatusEnum('status').notNull().default('active'),
+    // Set when an expired call is archived: it leaves the expired list as
+    // well as every active view. Cleared on restore.
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    archivedBy: uuid('archived_by').references(() => users.id, { onDelete: 'set null' }),
     source: text('source'),
     url: text('url').notNull().unique(),
     contentHash: bytea('content_hash'),
@@ -415,6 +419,7 @@ export const grants = pgTable(
   (t) => [
     index('grants_deadline_idx').on(t.deadline),
     index('grants_status_idx').on(t.status),
+    index('grants_archived_idx').on(t.archivedAt),
     index('grants_funder_idx').on(t.funderId),
     index('grants_regions_idx').using('gin', t.eligibleRegions),
     index('grants_search_idx').using('gin', t.search),

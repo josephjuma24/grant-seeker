@@ -57,6 +57,8 @@ export function toGrantDto(grant: GrantRow) {
     eligibleRegions: grant.eligibleRegions,
     eligibleOrgTypes: grant.eligibleOrgTypes,
     status: grant.status,
+    lifecycle: grant.lifecycle,
+    archivedAt: grant.archivedAt,
     source: grant.source,
     url: grant.url,
     funderId: grant.funderId,
