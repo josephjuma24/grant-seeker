@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Claude desktop app files (preview config, session worktrees); not part of the project
+.claude/
