@@ -61,6 +61,8 @@ export function toGrantDto(grant: GrantRow) {
     archivedAt: grant.archivedAt,
     endedOn: grant.endedOn,
     archivedByAge: grant.archivedByAge,
+    openToAfrica: grant.openToAfrica,
+    screenedOut: grant.screenedOut,
     editionCount: grant.editionCount,
     newerEditionId: grant.newerEditionId,
     source: grant.source,

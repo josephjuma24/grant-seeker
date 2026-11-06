@@ -1462,9 +1462,30 @@ export default function App() {
                 <div>
                   <h1 className="text-2xl font-black text-gray-900 tracking-tight">Intelligence Dashboard</h1>
                   <p className="text-gray-500 text-sm mt-1">
-                    AI agents are tracking <span className="font-semibold text-gray-900">{analytics?.totalActiveGrants ?? lifecycleCounts.active} open calls</span> from <span className="font-semibold text-gray-900">{analytics?.activeFundersCount ?? 0} funders</span>
+                    AI agents are tracking <span className="font-semibold text-gray-900">{analytics?.totalActiveGrants ?? lifecycleCounts.active} open calls</span> open to African applicants from <span className="font-semibold text-gray-900">{analytics?.activeFundersCount ?? 0} funders</span>
                     {analytics?.newThisWeekCount ? <> &middot; <span className="font-semibold text-emerald-700">{analytics.newThisWeekCount} new this week</span></> : null}.
                   </p>
+                  {/* Key metric: every listed call is open to applicants based in Africa. */}
+                  <div id="dashboard-africa-metric" className="flex flex-wrap items-center gap-1.5 mt-2 text-[11px]">
+                    <span className="inline-flex items-center gap-1 font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                      <Globe className="w-3 h-3" aria-hidden="true" />
+                      Open to Africa: {analytics?.totalActiveGrants ?? 0} calls
+                    </span>
+                    <span className="font-semibold text-gray-700 bg-white border border-gray-200 px-2 py-0.5 rounded-full" title="Calls naming Africa, Sub-Saharan Africa or an African country">
+                      {analytics?.africaFocusedCount ?? 0} Africa-focused
+                    </span>
+                    <span className="font-semibold text-gray-700 bg-white border border-gray-200 px-2 py-0.5 rounded-full" title="Calls open worldwide or to low- and middle-income countries">
+                      {analytics?.internationalCount ?? 0} international
+                    </span>
+                    {((analytics?.screenedNoAmountCount ?? 0) + (analytics?.screenedNotAfricaCount ?? 0)) > 0 && (
+                      <span
+                        className="text-gray-500"
+                        title="Found by the agents but not listed: calls that state no award amount, or that applicants based in Africa cannot apply to (for example US- or EU-only calls)"
+                      >
+                        · Screened out: {analytics?.screenedNotAfricaCount ?? 0} not open to Africa, {analytics?.screenedNoAmountCount ?? 0} with no stated amount
+                      </span>
+                    )}
+                  </div>
                   {/* Matching is scored against the user's whole profile (qualifications,
                       track record, documents, eligibility), so say how strong that is. */}
                   <p id="dashboard-profile-match" className="text-gray-500 text-xs mt-1">

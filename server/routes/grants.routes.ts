@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { withUserTx, type Tx } from '../db/index.ts';
 import { bookmarks, funders, grantMatches, grants } from '../db/schema.ts';
 import { ARCHIVE_AFTER_DAYS, CRITICAL_DEADLINE_DAYS, DUE_THIS_WEEK_DAYS } from '../../shared/grantLifecycle.ts';
+import { isAfrica } from '../../shared/regions.ts';
 import { loadCallHistory } from '../lib/callHistory.ts';
 import { harvestStatus } from '../lib/harvestStatus.ts';
 import { liveStream } from '../lib/liveUpdates.ts';
@@ -14,8 +15,10 @@ import {
   GRANT_LIFECYCLES,
   grantRowColumns,
   endedOn,
+  inCatalogue,
   isArchived,
   isExpired,
+  isOpenByDate,
   isLive,
   lifecycleFilter,
   vectorLiteral,
@@ -77,6 +80,9 @@ const ListQuery = zPagination.extend({
   status: z.enum(['active', 'closed']).optional(),
   // active: open calls; expired: closed or past deadline; archived: filed away.
   lifecycle: z.enum([...GRANT_LIFECYCLES, 'all']).default('all'),
+  // Screened-out calls (no amount, or not open to African applicants) are
+  // left out unless asked for: 'only' lists just them, for review.
+  screened: z.enum(['exclude', 'include', 'only']).default('exclude'),
   deadlineFrom: z.iso.date().optional(),
   deadlineTo: z.iso.date().optional(),
   minAmount: z.coerce.number().nonnegative().optional(),
@@ -109,6 +115,7 @@ grantsRouter.get(
       orgType ? sql`exists (select 1 from unnest(${grants.eligibleOrgTypes}) o where o ilike ${`%${escapeLike(orgType)}%`})` : undefined,
       query.status ? eq(grants.status, query.status) : undefined,
       query.lifecycle !== 'all' ? lifecycleFilter[query.lifecycle] : undefined,
+      query.screened === 'exclude' ? inCatalogue : query.screened === 'only' ? sql`not ${inCatalogue}` : undefined,
       query.deadlineFrom ? gte(grants.deadline, query.deadlineFrom) : undefined,
       query.deadlineTo ? lte(grants.deadline, query.deadlineTo) : undefined,
       query.minAmount !== undefined ? gte(grants.amount, query.minAmount) : undefined,
@@ -214,6 +221,19 @@ grantsRouter.get(
         .from(grants)
         .where(active);
 
+      // Africa eligibility, the catalogue's key metric: every listed call is
+      // open to African applicants; split into Africa-focused calls and
+      // international ones (worldwide or low- and middle-income countries).
+      const listedRegions = await tx.select({ regions: grants.eligibleRegions }).from(grants).where(active);
+      const africaFocused = listedRegions.filter((r) => r.regions.some(isAfrica)).length;
+      const [screened] = await tx
+        .select({
+          noAmount: sql<number>`count(*) filter (where coalesce(${grants.amount}, 0) <= 0)`.mapWith(Number),
+          notAfrica: sql<number>`count(*) filter (where ${grants.amount} > 0 and ${grants.openToAfrica} is not true)`.mapWith(Number),
+        })
+        .from(grants)
+        .where(isOpenByDate);
+
       // "National Science Foundation (NSF)" → "National Science Foundation"
       const [lapsed] = await tx
         .select({
@@ -282,6 +302,10 @@ grantsRouter.get(
         fundedGrantsCount: totals?.funded ?? 0,
         activeFundersCount: totals?.funders ?? 0,
         newThisWeekCount: totals?.newThisWeek ?? 0,
+        africaFocusedCount: africaFocused,
+        internationalCount: listedRegions.length - africaFocused,
+        screenedNoAmountCount: screened?.noAmount ?? 0,
+        screenedNotAfricaCount: screened?.notAfrica ?? 0,
         harvest,
         generatedAt: new Date().toISOString(),
         expiredGrantsCount: lapsed?.expired ?? 0,

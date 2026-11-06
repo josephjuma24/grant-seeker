@@ -71,3 +71,57 @@ export function applicantRegionEligible(grantRegion: string, applicantRegion: st
   const a = applicant.toLowerCase();
   return g.includes(a) || a.includes(g);
 }
+
+/**
+ * The catalogue rule: GrantSeeker lists calls that applicants based in
+ * Africa (Sub-Saharan Africa included) can apply to. A call qualifies when
+ * any eligible region names Africa or an African country, is worldwide or
+ * international, or targets low- and middle-income countries. Calls open
+ * only to, say, the United States or the European Union do not.
+ */
+export const isOpenToAfrica = (regions: string[]): boolean =>
+  regions.some((r) => isAfrica(r) || isWorldwide(r) || isGlobalSouth(r));
+
+const AFRICAN_PLACES: [RegExp, string][] = [
+  [/sub-?saharan africa/i, 'Sub-Saharan Africa'],
+  [/east(ern)? africa/i, 'East Africa'],
+  [/west(ern)? africa/i, 'West Africa'],
+  [/southern africa/i, 'Southern Africa'],
+  [/\bafrica\b/i, 'Africa'],
+  [/\bkenya/i, 'Kenya'],
+  [/\buganda/i, 'Uganda'],
+  [/\btanzania/i, 'Tanzania'],
+  [/\brwanda/i, 'Rwanda'],
+  [/\bethiopia/i, 'Ethiopia'],
+  [/\bnigeria/i, 'Nigeria'],
+  [/\bghana/i, 'Ghana'],
+  [/\bsouth africa\b/i, 'South Africa'],
+  [/\bsenegal/i, 'Senegal'],
+  [/\bmalawi/i, 'Malawi'],
+  [/\bzambia/i, 'Zambia'],
+  [/\bmozambique/i, 'Mozambique'],
+];
+
+// "Foreign organizations are eligible", "non-U.S. entities may apply",
+// "Non-domestic (non-US) Entities (Foreign Organizations)" and the like.
+const FOREIGN_ELIGIBLE =
+  /(foreign|non-?\s?u\.?\s?s\.?|non-?domestic|international|overseas)\s+(\(non-?u\.?s\.?\)\s+)?(organi[sz]ations?|entities|institutions?|applicants?|universities|ngos?|governments?|public international organi[sz]ations?)[^.;]{0,120}?\b(are|is|will be)?\s*(eligible|may apply|can apply|welcome)|non-?domestic \(non-?us\) entities|eligible applicants? (include|are)[^.;]{0,160}(foreign|non-?u\.?s\.?|international)/i;
+const FOREIGN_INELIGIBLE =
+  /(foreign|non-?\s?u\.?\s?s\.?|non-?domestic|international|overseas)\s+(organi[sz]ations?|entities|institutions?|applicants?|components?)[^.;]{0,80}?\b(are not|is not|not)\s+(eligible|allowed|permitted)|(only|limited to)[^.;]{0,60}\b(u\.?s\.?|domestic|united states)\b[^.;]{0,40}(organi[sz]ations?|entities|institutions?|applicants?)/i;
+
+/**
+ * Regions a call is open to, read from its eligibility and description
+ * text, for sources that do not state regions themselves (Grants.gov lists
+ * US federal calls, some of which accept foreign organisations).
+ */
+export function regionsFromEligibilityText(baseRegions: string[], text: string): string[] {
+  const out = [...baseRegions];
+  // "U.S." → "US", so its full stops do not read as sentence ends.
+  const t = text.replace(/\s+/g, ' ').replace(/\bU\.\s?S\.(?=[\s,;)]|$)/gi, 'US');
+  // A call can be *about* Africa yet open only to US organisations, so
+  // African places count only once foreign applicants are allowed.
+  if (!FOREIGN_ELIGIBLE.test(t) || FOREIGN_INELIGIBLE.test(t)) return out.slice(0, 30);
+  out.push('International (non-U.S. organisations eligible)');
+  for (const [re, name] of AFRICAN_PLACES) if (re.test(t) && !out.includes(name)) out.push(name);
+  return out.slice(0, 30);
+}

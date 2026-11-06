@@ -3,6 +3,8 @@ import { createHash } from 'node:crypto';
 import { XMLParser } from 'fast-xml-parser';
 import { z } from 'zod';
 
+import { regionsFromEligibilityText } from '../../shared/regions.ts';
+
 // Where grants come from, and how each kind of source is read. Pure: no
 // database and no process settings, so the API can list the sources too.
 
@@ -263,6 +265,7 @@ const GrantsGovDetail = z.object({
           awardFloor: z.unknown().optional(),
           responseDateStr: z.string().nullish(),
           applicantTypes: z.array(z.object({ description: z.string() })).nullish(),
+          applicantEligibilityDesc: z.string().nullish(),
           fundingActivityCategories: z.array(z.object({ id: z.string(), description: z.string() })).nullish(),
         })
         .passthrough()
@@ -274,6 +277,7 @@ const GrantsGovDetail = z.object({
           estimatedFunding: z.unknown().optional(),
           numberOfAwards: z.unknown().optional(),
           applicantTypes: z.array(z.object({ description: z.string() })).nullish(),
+          applicantEligibilityDesc: z.string().nullish(),
           fundingActivityCategories: z.array(z.object({ id: z.string(), description: z.string() })).nullish(),
         })
         .passthrough()
@@ -331,7 +335,16 @@ async function grantsGov(source: Source, config: Extract<SourceConfig, { adapter
         funderName: syn?.agencyName ?? hit.agency,
         amount: syn ? money(syn.awardCeiling) : forecastPerAward,
         deadline: plausibleDeadline(responseDate && isoDate.test(responseDate) ? responseDate : isoFromUs(hit.closeDate)),
-        eligibleRegions: ['United States'],
+        // US federal calls; some also accept foreign organisations, which the
+        // eligibility text says (shared/regions.ts reads it).
+        eligibleRegions: regionsFromEligibilityText(
+          ['United States'],
+          [
+            syn?.applicantEligibilityDesc ?? fc?.applicantEligibilityDesc ?? '',
+            ...(syn?.applicantTypes ?? fc?.applicantTypes ?? []).map((t) => t.description),
+            htmlToText(syn?.synopsisDesc ?? fc?.forecastDesc ?? ''),
+          ].join(' | '),
+        ),
         eligibleOrgTypes: (syn?.applicantTypes ?? fc?.applicantTypes ?? []).map((t) => t.description.slice(0, 300)).slice(0, 30),
         // Prefer a category the catalogue knows (a call can list several).
         category: (() => {

@@ -26,12 +26,27 @@ export const endedOn = sql`(case
   when ${grants.status} = 'closed' then coalesce(least(${grants.deadline}, (${grants.closedAt} at time zone 'UTC')::date), (${grants.updatedAt} at time zone 'UTC')::date)
   when ${grants.deadline} < current_date then ${grants.deadline}
 end)`;
+/**
+ * The catalogue rule: GrantSeeker lists calls that state an award amount
+ * and that applicants based in Africa can apply to (open_to_africa, set by
+ * the harvester from shared/regions.ts). Everything else is screened out of
+ * listings, dashboard figures, matching and alerts, but kept in the
+ * database so the harvester does not re-read it on every run.
+ */
+export const inCatalogue = sql`(${grants.amount} > 0 and ${grants.openToAfrica} is true)`;
+export const screenedOutReason = sql<'no_amount' | 'not_open_to_africa' | null>`(case
+  when coalesce(${grants.amount}, 0) <= 0 then 'no_amount'
+  when ${grants.openToAfrica} is not true then 'not_open_to_africa'
+end)`;
+
 const hasEnded = sql`(${grants.status} = 'closed' or ${grants.deadline} < current_date)`;
 /** Ended more than ARCHIVE_AFTER_DAYS days ago: archived by the rule, whatever archived_at says. */
 export const isPastArchiveAge = sql`(${hasEnded} and ${endedOn} < current_date - ${sql.raw(String(ARCHIVE_AFTER_DAYS))})`;
-export const isArchived = sql`(${grants.archivedAt} is not null or ${isPastArchiveAge})`;
-export const isExpired = sql`(${grants.archivedAt} is null and ${hasEnded} and not ${isPastArchiveAge})`;
-export const isLive = sql`(${grants.archivedAt} is null and ${grants.status} = 'active' and (${grants.deadline} is null or ${grants.deadline} >= current_date))`;
+export const isArchived = sql`(${inCatalogue} and (${grants.archivedAt} is not null or ${isPastArchiveAge}))`;
+export const isExpired = sql`(${inCatalogue} and ${grants.archivedAt} is null and ${hasEnded} and not ${isPastArchiveAge})`;
+export const isLive = sql`(${inCatalogue} and ${grants.archivedAt} is null and ${grants.status} = 'active' and (${grants.deadline} is null or ${grants.deadline} >= current_date))`;
+/** Open by date alone, before the catalogue rule: what the agents found. */
+export const isOpenByDate = sql`(${grants.archivedAt} is null and ${grants.status} = 'active' and (${grants.deadline} is null or ${grants.deadline} >= current_date))`;
 
 export const lifecycleFilter: Record<GrantLifecycle, ReturnType<typeof sql>> = {
   active: isLive,
@@ -49,12 +64,14 @@ export const grantRowColumns = {
   lifecycle: grantLifecycle.as('lifecycle'),
   endedOn: sql<string | null>`to_char(${endedOn}, 'YYYY-MM-DD')`.as('ended_on'),
   // Archived by the 30-day rule rather than by an admin: cannot be restored.
+  screenedOut: screenedOutReason.as('screened_out'),
   archivedByAge: sql<boolean>`coalesce(${isPastArchiveAge}, false)`.as('archived_by_age'),
   // Editions of this call: distinct (title, deadline) listings in its
   // series plus earlier versions saved from its own page.
   editionCount: sql<number>`(
     (case when length(split_part(${grants.seriesKey}, '|', 2)) >= 12
-      then (select count(distinct (lower(g2.title), g2.deadline)) from grants g2 where g2.series_key = ${grants.seriesKey})
+      then (select count(distinct (lower(g2.title), g2.deadline)) from grants g2
+            where g2.series_key = ${grants.seriesKey} and g2.amount > 0 and g2.open_to_africa is true)
       else 1 end)
     + (case when length(split_part(${grants.seriesKey}, '|', 2)) >= 12
       then (select count(*) from grant_revisions r join grants g3 on g3.id = r.grant_id where g3.series_key = ${grants.seriesKey})
@@ -64,6 +81,7 @@ export const grantRowColumns = {
   newerEditionId: sql<string | null>`(
     select g2.id from grants g2
     where g2.series_key = ${grants.seriesKey} and g2.deadline > ${grants.deadline}
+      and g2.amount > 0 and g2.open_to_africa is true
       and length(split_part(g2.series_key, '|', 2)) >= 12
     order by g2.deadline desc limit 1
   )`.as('newer_edition_id'),
@@ -75,6 +93,7 @@ export type GrantRow = Omit<Grant, 'embedding' | 'search'> & {
   lifecycle: GrantLifecycle;
   endedOn: string | null;
   archivedByAge: boolean;
+  screenedOut: 'no_amount' | 'not_open_to_africa' | null;
   editionCount: number;
   newerEditionId: string | null;
 };

@@ -62,6 +62,8 @@ export interface Grant {
   endedOn: string | null;
   /** Archived because it ended over 30 days ago (cannot be restored) */
   archivedByAge: boolean;
+  /** Can applicants based in Africa apply? (the catalogue rule) */
+  openToAfrica?: boolean | null;
   /** Editions of this call seen so far, this one included */
   editionCount: number;
   /** The next cycle of this call, when the funder has published one */
@@ -159,6 +161,14 @@ export interface DashboardStats {
   activeFundersCount: number;
   newThisWeekCount: number;
   harvest: HarvestStatus | null;
+  /** Listed calls (all open to African applicants) naming Africa or an African country */
+  africaFocusedCount: number;
+  /** Listed calls open worldwide or to low- and middle-income countries */
+  internationalCount: number;
+  /** Open calls screened out because they state no award amount */
+  screenedNoAmountCount: number;
+  /** Open calls screened out because African applicants cannot apply (e.g. US- or EU-only) */
+  screenedNotAfricaCount: number;
   generatedAt: string;
   /** Closed or past deadline, not yet archived */
   expiredGrantsCount: number;

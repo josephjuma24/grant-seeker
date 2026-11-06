@@ -230,6 +230,7 @@ export function normalizeGrant(g: Raw): Grant {
     archivedAt: g.archivedAt ?? null,
     endedOn: g.endedOn ?? null,
     archivedByAge: g.archivedByAge ?? false,
+    openToAfrica: g.openToAfrica ?? null,
     editionCount: g.editionCount ?? 1,
     newerEditionId: g.newerEditionId ?? null,
     funderId: g.funderId ?? '',

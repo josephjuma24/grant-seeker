@@ -6,6 +6,7 @@ import * as schema from '../db/schema.ts';
 import type { StructuredProfile } from '../../shared/profile.ts';
 import { applicantProfiles, auditLog, funders, grants, notifications, scraperRuns, users } from '../db/schema.ts';
 import { ARCHIVE_AFTER_DAYS } from '../../shared/grantLifecycle.ts';
+import { isOpenToAfrica } from '../../shared/regions.ts';
 import { isPastArchiveAge } from '../lib/grantQueries.ts';
 import { scoreUserMatches } from '../lib/matchService.ts';
 import {
@@ -362,6 +363,7 @@ async function harvestSource(
       currency: g.currency.toUpperCase(),
       deadline: g.deadline,
       eligibleRegions: g.eligibleRegions,
+      openToAfrica: isOpenToAfrica(g.eligibleRegions),
       eligibleOrgTypes: g.eligibleOrgTypes,
       keywords: g.keywords,
       funderId,
@@ -535,6 +537,7 @@ async function matchUsers(deps: PipelineDeps, changedGrantIds: string[], rematch
  * archived from their dates alone; the stamp records when it happened.
  */
 export async function closeAndArchive(db: PipelineDeps['db']) {
+  await classifyCatalogue(db);
   const closed = await db
     .update(grants)
     .set({ status: 'closed', closedAt: sql`coalesce(${grants.closedAt}, now())` })
@@ -546,6 +549,23 @@ export async function closeAndArchive(db: PipelineDeps['db']) {
     .where(and(isNull(grants.archivedAt), isPastArchiveAge))
     .returning({ id: grants.id });
   return { closed: closed.length, archived: archived.length };
+}
+
+/**
+ * Sets open_to_africa on calls not classified yet (rows from before the
+ * column, imports, admin edits that cleared it). New harvests set it on write.
+ */
+export async function classifyCatalogue(db: PipelineDeps['db']) {
+  const rows = await db
+    .select({ id: grants.id, eligibleRegions: grants.eligibleRegions })
+    .from(grants)
+    .where(isNull(grants.openToAfrica));
+  if (rows.length === 0) return 0;
+  const open = rows.filter((r) => isOpenToAfrica(r.eligibleRegions)).map((r) => r.id);
+  const closed = rows.filter((r) => !isOpenToAfrica(r.eligibleRegions)).map((r) => r.id);
+  if (open.length) await db.update(grants).set({ openToAfrica: true }).where(inArray(grants.id, open));
+  if (closed.length) await db.update(grants).set({ openToAfrica: false }).where(inArray(grants.id, closed));
+  return rows.length;
 }
 
 export async function housekeeping(deps: Pick<PipelineDeps, 'db' | 'log'>) {

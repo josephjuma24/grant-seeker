@@ -71,6 +71,13 @@
       "when": 1793968100232,
       "tag": "0009_grant_closed_at",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793971874026,
+      "tag": "0010_grant_open_to_africa",
+      "breakpoints": true
     }
   ]
 }

@@ -411,6 +411,9 @@ export const grants = pgTable(
     deadline: date('deadline'),
     eligibleRegions: text('eligible_regions').array().notNull().default(sql`'{}'::text[]`),
     eligibleOrgTypes: text('eligible_org_types').array().notNull().default(sql`'{}'::text[]`),
+    // Catalogue rule (shared/regions.ts isOpenToAfrica): can applicants based
+    // in Africa apply? Set on every write; null until first classified.
+    openToAfrica: boolean('open_to_africa'),
     status: grantStatusEnum('status').notNull().default('active'),
     // When the call was first seen closed. With the deadline it gives the
     // call's end date, from which the 30-day archive rule counts.

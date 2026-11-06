@@ -11,11 +11,11 @@
  * Listings with the same title and deadline are one edition published
  * twice; they are folded together.
  */
-import { and, asc, eq, inArray, ne, sql } from 'drizzle-orm';
+import { and, asc, eq, inArray, ne, or, sql } from 'drizzle-orm';
 
 import type { Tx } from '../db/index.ts';
 import { funders, grantRevisions, grants, type GrantSnapshot } from '../db/schema.ts';
-import { grantRowColumns, type GrantLifecycle, type GrantRow } from './grantQueries.ts';
+import { grantRowColumns, inCatalogue, type GrantLifecycle, type GrantRow } from './grantQueries.ts';
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -179,7 +179,8 @@ export async function loadCallHistory(tx: Tx, grantId: string): Promise<CallHist
           .select(grantRowColumns)
           .from(grants)
           .leftJoin(funders, eq(funders.id, grants.funderId))
-          .where(eq(grants.seriesKey, current.seriesKey))
+          // Screened-out listings stay out of the trail; the one being viewed stays in.
+          .where(and(eq(grants.seriesKey, current.seriesKey), or(inCatalogue, eq(grants.id, current.id))))
       : [current];
 
   // A renamed call can still carry the same reference-number pattern.
@@ -198,7 +199,7 @@ export async function loadCallHistory(tx: Tx, grantId: string): Promise<CallHist
       .select(grantRowColumns)
       .from(grants)
       .leftJoin(funders, eq(funders.id, grants.funderId))
-      .where(and(sameFunder, ne(grants.id, current.id)))
+      .where(and(sameFunder, ne(grants.id, current.id), inCatalogue))
       .limit(1000);
     for (const c of candidates) {
       if (seen.has(c.id)) continue;
