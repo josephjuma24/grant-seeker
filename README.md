@@ -136,7 +136,7 @@ flowchart LR
 │   ├── regions.ts          Geographic eligibility and the Africa catalogue rule
 │   └── profile.ts          Structured profile and fit types
 ├── server-db.json          Seed data from the prototype (optional import)
-├── backend/, server.ts     Legacy prototypes, not used (see below)
+├── server.ts               Legacy prototype, not used (see below)
 └── .env.example            Configuration template
 ```
 
@@ -381,7 +381,7 @@ NODE_ENV=production npm run start:worker
 
 ## Legacy code
 
-`server.ts` (repository root, `npm run dev:legacy`) and `backend/` (a FastAPI prototype) come from earlier versions and are **not** used by the current app. They are kept for reference and can be removed.
+`server.ts` (repository root, `npm run dev:legacy`) comes from an earlier version and is **not** used by the current app. It is kept for reference and can be removed. An earlier FastAPI prototype in `backend/` was removed; it remains in git history.
 
 ---
 
