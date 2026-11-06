@@ -83,6 +83,7 @@ import {
   StatusTransition
 } from './types';
 import { CallHistory } from './components/CallHistory';
+import { ExportMenu } from './components/ExportMenu';
 import { ARCHIVE_AFTER_DAYS, CRITICAL_DEADLINE_DAYS, daysUntilArchive } from '../shared/grantLifecycle';
 import { api, ApiError, onSessionExpired } from './api';
 import ResearchOffice from './components/ResearchOffice';
@@ -279,24 +280,9 @@ export default function App() {
   const [selectedRegion, setSelectedRegion] = useState('all');
   const [selectedOrgType, setSelectedOrgType] = useState('all');
   const [matchFilterMode, setMatchFilterMode] = useState<'all' | 'high'>('all');
-  // List by default; the viewer's last choice is remembered on this device.
-  const [grantViewMode, setGrantViewModeState] = useState<'list' | 'tiles' | 'details'>(() => {
-    try {
-      const saved = localStorage.getItem('gs.explorerView');
-      if (saved === 'list' || saved === 'tiles' || saved === 'details') return saved;
-    } catch {
-      /* storage blocked */
-    }
-    return 'list';
-  });
-  const setGrantViewMode = (mode: 'list' | 'tiles' | 'details') => {
-    setGrantViewModeState(mode);
-    try {
-      localStorage.setItem('gs.explorerView', mode);
-    } catch {
-      /* storage blocked */
-    }
-  };
+  // The Grant Explorer always opens in List view. Tiles and Details are
+  // available for the visit, and reset to List the next time it opens.
+  const [grantViewMode, setGrantViewMode] = useState<'list' | 'tiles' | 'details'>('list');
   // Active calls by default; expired and archived calls are kept apart.
   const [grantLifecycleView, setGrantLifecycleView] = useState<GrantLifecycle>('active');
   const [archivingGrantId, setArchivingGrantId] = useState<string | null>(null);
@@ -782,6 +768,11 @@ export default function App() {
       cancelled = true;
     };
   }, [authed, activeTab, analytics?.matchedGrantsCount]);
+
+  // Every visit to the Grant Explorer starts in List view.
+  useEffect(() => {
+    if (activeTab === 'explorer') setGrantViewMode('list');
+  }, [activeTab]);
 
   // --- Live dashboard ---
   // The API pushes a "change" event whenever the harvester, housekeeping or
@@ -2980,17 +2971,18 @@ export default function App() {
                               Official Call Portal
                             </a>
 
-                            <div className="flex gap-2">
+                            <div className="flex items-center gap-2">
+                              <ExportMenu grant={selectedExplorerGrant} match={detailsMatch} onToast={triggerToast} />
                               <button
                                 onClick={() => handleOpenInAssistant(selectedExplorerGrant)}
-                                className="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold rounded-lg text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5 animate-pulse"
+                                className="px-3 py-2 border border-transparent bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold rounded-lg text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5 animate-pulse"
                               >
                                 <Sparkles className="w-3.5 h-3.5" />
                                 Draft with AI
                               </button>
                               <button
                                 onClick={() => handleTrackGrant(selectedExplorerGrant.id)}
-                                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs shadow-sm transition-all cursor-pointer"
+                                className="px-3.5 py-2 border border-transparent bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs shadow-sm transition-all cursor-pointer"
                               >
                                 Activate Pipeline Tracking
                               </button>
@@ -5407,18 +5399,19 @@ The bootcamp expects to reach 100+ educators, who will introduce computational t
                 Go to Official Call Portal <ExternalLink className="w-3.5 h-3.5" />
               </a>
 
-              <div className="flex gap-3">
-                <button 
+              <div className="flex items-center gap-2">
+                <button
                   id="cancel-modal-btn"
-                  onClick={() => setSelectedGrant(null)} 
-                  className="px-4 py-2 border border-gray-200 hover:bg-gray-50 text-gray-500 hover:text-gray-700 text-xs font-bold rounded-lg cursor-pointer transition-all"
+                  onClick={() => setSelectedGrant(null)}
+                  className="px-3 py-2 border border-gray-200 hover:bg-gray-50 text-gray-500 hover:text-gray-700 text-xs font-bold rounded-lg cursor-pointer transition-all"
                 >
                   Close View
                 </button>
-                <button 
+                <ExportMenu grant={selectedGrant} match={selectedMatch} onToast={triggerToast} />
+                <button
                   id="modal-draft-ai-btn"
                   onClick={() => handleOpenInAssistant(selectedGrant)}
-                  className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-xs font-extrabold rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer transition-all animate-pulse"
+                  className="px-3 py-2 border border-transparent bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-xs font-extrabold rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer transition-all animate-pulse"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   Draft with AI
@@ -5426,7 +5419,7 @@ The bootcamp expects to reach 100+ educators, who will introduce computational t
                 <button 
                   id="save-track-btn"
                   onClick={() => handleTrackGrant(selectedGrant.id)}
-                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-sm cursor-pointer transition-all"
+                  className="px-3.5 py-2 border border-transparent bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-sm cursor-pointer transition-all"
                 >
                   Activate Pipeline Tracking
                 </button>
